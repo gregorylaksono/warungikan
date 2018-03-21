@@ -13289,3 +13289,9 @@ div.v-layout.v-horizontal.v-widget {
 .warungikan .color-orange {
 	color: orange;
 }
+
+.warungikan .v-progressbar.pb-center-align {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}

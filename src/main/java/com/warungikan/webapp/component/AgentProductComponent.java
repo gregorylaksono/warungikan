@@ -5,8 +5,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import com.warungikan.webapp.dialog.ConfirmPayment;
 import com.warungikan.webapp.model.AgentProduct;
 import com.warungikan.webapp.util.Factory;
+import com.warungikan.webapp.window.ConfirmDialog;
 
 public class AgentProductComponent extends VerticalLayout{
 	
@@ -25,6 +27,13 @@ public class AgentProductComponent extends VerticalLayout{
 		Label addressL = Factory.createLabel("Alamat: "+agentProduct.getAddress());
 		Label availabilityL = null;
 		Button choose = Factory.createButtonOk("Pilih");
+		choose.addClickListener(e->{
+			
+			ConfirmPayment t = new ConfirmPayment(null, null);
+			ConfirmDialog d = new ConfirmDialog(t);
+			d.show();
+			
+		});
 		if(agentProduct.getAvailability().equals(AgentProduct.AVAILABILITY.EMPTY)) {
 			availabilityL = Factory.createLabel("Stok: Kosong");
 			availabilityL.addStyleName("color-red");

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
@@ -34,6 +35,7 @@ import com.warungikan.webapp.view.ShoppingCartView;
  * overridden to add component to the user interface and initialize non-component functionality.
  */
 @Theme("warungikan")
+@Push
 public class MyUI extends UI {
 
 	private Navigator navigator;

@@ -15,6 +15,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.warungikan.webapp.MyUI;
@@ -46,22 +47,51 @@ public class ShippingAddressView extends VerticalLayout implements View{
 		agents.add(new AgentProduct("Mei", AVAILABILITY.EMPTY, "Cilandak", "335689003"));
 		agents.add(new AgentProduct("Dodo", AVAILABILITY.PARTLY, "Pluit", "466722011"));
 		
-		agentsLayout = createAgentsLayout(agents);
+		ProgressBar pb3 = new ProgressBar();
+        pb3.setIndeterminate(true);
+        pb3.setCaption("Mencari agent terdekat...");
+        pb3.addStyleName("pb-center-align");
+		Runnable l = new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(5000);
+					UI.getCurrent().access(new Runnable() {
+						
+						@Override
+						public void run() {
+							agentsLayout = createAgentsLayout(agents);
+							replaceComponent(pb3, agentsLayout);
+//							setComponentAlignment(agentsLayout, Alignment.MIDDLE_CENTER);
+						}
+					});
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		
+		
+		
 
 		HorizontalLayout myData = createMyData();
 		
 		
 		addComponent(myData);
-		addComponent(agentsLayout);
+		addComponent(pb3);
 
 
 		setExpandRatio(myData, 0.0f);
-		setExpandRatio(agentsLayout, 1.0f);
+		setExpandRatio(pb3, 1.0f);
 		setComponentAlignment(myData, Alignment.TOP_CENTER);
-		setComponentAlignment(agentsLayout, Alignment.MIDDLE_CENTER);
+		setComponentAlignment(pb3, Alignment.TOP_CENTER);
 
 		setMargin(false);
 		setSpacing(true);
+		Thread as = new Thread(l);
+		as.start();
 	}
 
 	private HorizontalLayout createMyData() {
@@ -99,6 +129,7 @@ public class ShippingAddressView extends VerticalLayout implements View{
 	}
 
 	private GridLayout createAgentsLayout(List<AgentProduct> agents) {
+		
 		GridLayout g = new GridLayout(4, 6);
 		g.setSpacing(true);
 		g.setMargin(true);
