@@ -18,6 +18,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.warungikan.webapp.model.ShopItem;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.view.LoginView;
@@ -71,6 +72,12 @@ public class MyUI extends UI {
 
 	public void setItems(List<ShopItem> items) {
 		this.items = items;
+	}
+	
+	public void closeWindow() {
+		for(Window w: getWindows()) {
+			w.close();
+		}
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)

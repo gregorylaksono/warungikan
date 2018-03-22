@@ -104,6 +104,7 @@ public class LoginView extends VerticalLayout implements View{
 		n.addView(Constant.VIEW_SHOP, ShopView.class);
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
 		n.addView(Constant.VIEW_CONFIRM_PAGE, ConfirmationPageView.class);
+		n.addView(Constant.VIEW_MY_TRANSACTION, MyTransaction.class);
 		UI.getCurrent().setNavigator(n);
 		UI.getCurrent().setContent(root);
 		n.navigateTo(Constant.VIEW_SHOP);
@@ -157,7 +158,9 @@ public class LoginView extends VerticalLayout implements View{
         dropdown.addItem("Belanja",  e->{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_SHOP);
         });
-        dropdown.addItem("Transaksi saya", null);
+        dropdown.addItem("Transaksi saya", e->{
+        	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_TRANSACTION);
+        });
         dropdown.addItem("Info", e ->{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_PROFILE);
         });
