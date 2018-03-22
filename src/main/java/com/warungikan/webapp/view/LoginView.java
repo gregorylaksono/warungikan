@@ -103,6 +103,7 @@ public class LoginView extends VerticalLayout implements View{
 		n.addView(Constant.VIEW_AGENT_SHIPMENT, ShippingAddressView.class);
 		n.addView(Constant.VIEW_SHOP, ShopView.class);
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
+		n.addView(Constant.VIEW_CONFIRM_PAGE, ConfirmationPageView.class);
 		UI.getCurrent().setNavigator(n);
 		UI.getCurrent().setContent(root);
 		n.navigateTo(Constant.VIEW_SHOP);

@@ -27,6 +27,10 @@ import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
 
 public class ShippingAddressView extends VerticalLayout implements View{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 854928347753429074L;
 	//	private GoogleMap addressMap;
 	private List<ShopItem> items;
 	private GridLayout agentsLayout;
@@ -56,14 +60,13 @@ public class ShippingAddressView extends VerticalLayout implements View{
 			@Override
 			public void run() {
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					UI.getCurrent().access(new Runnable() {
 						
 						@Override
 						public void run() {
 							agentsLayout = createAgentsLayout(agents);
 							replaceComponent(pb3, agentsLayout);
-//							setComponentAlignment(agentsLayout, Alignment.MIDDLE_CENTER);
 						}
 					});
 				} catch (InterruptedException e) {

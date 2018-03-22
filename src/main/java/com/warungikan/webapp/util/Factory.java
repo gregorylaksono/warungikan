@@ -36,4 +36,18 @@ public class Factory {
 		b.addStyleName(ValoTheme.BUTTON_PRIMARY);
 		return b;
 	}
+	
+	public static Button createButtonDanger(String string) {
+		Button b = new Button(string);
+		b.addStyleName(ValoTheme.BUTTON_TINY);
+		b.addStyleName(ValoTheme.BUTTON_DANGER);
+		return b;
+	}
+	
+	public static Button createButtonNormal(String string) {
+		Button b = new Button(string);
+		b.addStyleName(ValoTheme.BUTTON_TINY);
+		b.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+		return b;
+	}
 }

@@ -3,10 +3,12 @@ package com.warungikan.webapp.component;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.dialog.ConfirmPayment;
 import com.warungikan.webapp.model.AgentProduct;
+import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
 import com.warungikan.webapp.window.ConfirmDialog;
 
@@ -29,9 +31,7 @@ public class AgentProductComponent extends VerticalLayout{
 		Button choose = Factory.createButtonOk("Pilih");
 		choose.addClickListener(e->{
 			
-			ConfirmPayment t = new ConfirmPayment(null, null);
-			ConfirmDialog d = new ConfirmDialog(t);
-			d.show();
+			UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_CONFIRM_PAGE);
 			
 		});
 		if(agentProduct.getAvailability().equals(AgentProduct.AVAILABILITY.EMPTY)) {
