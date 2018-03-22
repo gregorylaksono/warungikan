@@ -5,6 +5,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
@@ -12,6 +13,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.util.Constant;
+import com.warungikan.webapp.util.Factory;
 
 public class MyTransaction extends VerticalLayout implements View {
 
@@ -33,7 +35,7 @@ public class MyTransaction extends VerticalLayout implements View {
 		
 		setWidth(100, Unit.PERCENTAGE);
 		setHeight(100, Unit.PERCENTAGE);
-		
+		VerticalLayout walletLayout = createWalletLayout();
 		ProgressBar pb3 = new ProgressBar();
         pb3.setIndeterminate(true);
         pb3.setCaption("Mengambil data transaksi...");
@@ -62,7 +64,7 @@ public class MyTransaction extends VerticalLayout implements View {
 		};
 		
 		
-		parent.setWidth(60, Unit.PERCENTAGE);
+		parent.setWidth(85, Unit.PERCENTAGE);
 		parent.addStyleName("product-container");
 		parent.setMargin(true);
 		parent.setSpacing(true);
@@ -82,15 +84,36 @@ public class MyTransaction extends VerticalLayout implements View {
 			UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_SHOP);
 		});
 		
+		addComponent(walletLayout);
 		addComponent(parent);
 		setComponentAlignment(parent, Alignment.MIDDLE_CENTER);
+		setComponentAlignment(walletLayout, Alignment.MIDDLE_CENTER);
 		
+		setExpandRatio(walletLayout, 0.0f);
 		setExpandRatio(parent, 1.0f);
 		
 		Thread as = new Thread(l);
 		as.start();
 	}
 	
+	private VerticalLayout createWalletLayout() {
+		VerticalLayout layout = new VerticalLayout();
+		layout.setWidth(85, Unit.PERCENTAGE);
+		layout.setMargin(true);
+		layout.setSpacing(true);
+		
+		layout.addStyleName("product-container");
+		Label header = Factory.createLabelHeaderNormal("Saldo sekarang : Rp. 450.000");
+		Button topupButton = Factory.createButtonOk("Top up saldo");
+		
+		layout.addComponent(header);
+		layout.addComponent(topupButton);
+		layout.setExpandRatio(header, 1.0f);
+		layout.setExpandRatio(topupButton, 0.0f);
+		
+		return layout;
+	}
+
 	private Table createTable() {
 		Table t = new Table();
 		t.setCaption("Pesanan saya");
@@ -104,15 +127,22 @@ public class MyTransaction extends VerticalLayout implements View {
 		t.addContainerProperty(CANCEL, Button.class, null);
 		
 		t.setColumnHeader(TRANASCTION_ID, "No pemesanan");
-		t.setColumnHeader(ORDER_ON, "Pesan tanggal");
+		t.setColumnHeader(ORDER_ON, "Tanggal");
 		t.setColumnHeader(AGENT_NAME, "Agen");
 		t.setColumnHeader(TOTAL_PRICE, "Harga");
 		t.setColumnHeader(PROGRESS, "Progress");
 		t.setColumnHeader(VIEW_DETAIL, "");
 		t.setColumnHeader(CANCEL, "");
 		
-		t.setColumnWidth(CANCEL, 100);
-		t.setColumnWidth(VIEW_DETAIL, 100);
+		t.setColumnWidth(ORDER_ON, 130);
+		t.setColumnWidth(AGENT_NAME, 130);
+		t.setColumnWidth(TOTAL_PRICE, 130);
+		t.setColumnWidth(PROGRESS, 130);
+//		t.setColumnWidth(CANCEL, 130);
+//		t.setColumnWidth(CANCEL, 130);
+		
+		t.setColumnWidth(CANCEL, 130);
+		t.setColumnWidth(VIEW_DETAIL, 130);
 		
 		t.setColumnAlignment(CANCEL, Align.CENTER);
 		t.setColumnAlignment(VIEW_DETAIL, Align.CENTER);
