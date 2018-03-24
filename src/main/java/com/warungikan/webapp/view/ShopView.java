@@ -49,25 +49,29 @@ public class ShopView extends VerticalLayout implements View{
 		grid.setMargin(true);
 		grid.setSpacing(true);
 		
-		ShopItemComponent item1 = new ShopItemComponent(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Gindara", "Netto : 200 Gr", "Rp. 30.000", "blabla"));
-		ShopItemComponent item2 = new ShopItemComponent(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Gindara", "Netto : 200 Gr", "Rp. 30.000", "blabla"));
-		ShopItemComponent item3 = new ShopItemComponent(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Gindara", "Netto : 200 Gr", "Rp. 30.000", "blabla"));
-		ShopItemComponent item4 = new ShopItemComponent(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Gindara", "Netto : 200 Gr", "Rp. 30.000", "blabla"));
-		ShopItemComponent item5 = new ShopItemComponent(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Gindara", "Netto : 200 Gr", "Rp. 30.000", "blabla"));
-		ShopItemComponent item6 = new ShopItemComponent(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Gindara", "Netto : 200 Gr", "Rp. 30.000", "blabla"));
-		grid.addComponent(item1);
-		grid.addComponent(item2);
-		grid.addComponent(item3);
-		grid.addComponent(item4);
-		grid.addComponent(item5);
-		grid.addComponent(item6);
+		List<FishShopItem> l = new ArrayList<>();
+		l.add(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Gindara", "Netto : 200 Gr", "Rp. 30.000", "blabla"));
+		l.add(new FishShopItem("http://warungikan.com/images/produk/WIN002.jpg", "Cobia", "Netto : 200 Gr", "Rp. 30.000", "blabla"));
+		l.add(new FishShopItem("http://warungikan.com/images/produk/WIN003.jpg", "Kakap Merah Chinaman", "Netto : 150 Gr", "Rp. 30.000", "blabla"));
+		l.add(new FishShopItem("http://warungikan.com/images/produk/WIN004.jpg", "Sunu Ekor Bulan (Utuh)", "Netto : 300-500 Gr", "Rp. 60.000", "blabla"));
+		l.add(new FishShopItem("http://warungikan.com/images/produk/WIN005.jpg", "Sunu Lodi (Utuh)", "Netto : 300-500 Gr", "Rp. 60.000", "blabla"));
+		l.add(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Tuna Sirip Kuning", "Netto : 100 Gr", "Rp. 25.000", "blabla"));
 		
-		grid.setComponentAlignment(item1, Alignment.MIDDLE_CENTER);
-		grid.setComponentAlignment(item2, Alignment.MIDDLE_CENTER);
-		grid.setComponentAlignment(item3, Alignment.MIDDLE_CENTER);
-		grid.setComponentAlignment(item4, Alignment.MIDDLE_CENTER);
-		grid.setComponentAlignment(item5, Alignment.MIDDLE_CENTER);
-		grid.setComponentAlignment(item6, Alignment.MIDDLE_CENTER);
+		int in =0;
+		List<ShopItem> it = new ArrayList<>();
+		for(FishShopItem i : l){
+			in++;
+			if(in<4){
+				it.add(new ShopItem(i, Integer.parseInt(String.valueOf(Math.round(Math.random()*10)))));				
+			}
+		}
+		((MyUI)UI.getCurrent()).setItems(it);
+		for(FishShopItem i : l){
+			ShopItemComponent item1 = new ShopItemComponent(i);
+			grid.addComponent(item1);
+			grid.setComponentAlignment(item1, Alignment.MIDDLE_CENTER);
+		}
+
 		grid.setWidth(100, Unit.PERCENTAGE);
 		grid.setSpacing(true);
 		

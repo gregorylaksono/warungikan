@@ -22,6 +22,7 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
+import com.warungikan.webapp.component.RegisterComponent;
 import com.warungikan.webapp.model.FishShopItem;
 import com.warungikan.webapp.model.ShopItem;
 import com.warungikan.webapp.util.Constant;
@@ -79,6 +80,10 @@ public class LoginView extends VerticalLayout implements View{
 			initData();
 			
 		});
+		
+		regiterButton.addClickListener(e ->{
+			UI.getCurrent().setContent(new RegisterComponent());
+		});
 		return form;
 	}
 
@@ -127,7 +132,7 @@ public class LoginView extends VerticalLayout implements View{
 		shoppingCart.setIcon(FontAwesome.SHOPPING_BASKET);
 		shoppingCart.addStyleName("fa-shopping-cart");
 		shoppingCart.addClickListener( e-> {
-					((MyUI) UI.getCurrent()).setItems(items);
+//					((MyUI) UI.getCurrent()).setItems(items);
 					UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_CART_DETAIL);
 				});
 		shoppingCart.addStyleName("cart-custom");
@@ -165,7 +170,12 @@ public class LoginView extends VerticalLayout implements View{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_PROFILE);
         });
         dropdown.addSeparator();
-        dropdown.addItem("Logout", null);
+        dropdown.addItem("Logout", e->{
+        	UI.getCurrent().getSession().close();
+        	UI.getCurrent().getPage().setLocation("/");
+//            getUI().getPage().setLocation("/");
+
+        });
 
         split.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
         split.addStyleName(ValoTheme.MENUBAR_SMALL);

@@ -39,6 +39,11 @@ import com.warungikan.webapp.view.ShoppingCartView;
 @Push
 public class MyUI extends UI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8766267531481479298L;
+
 	private Navigator navigator;
 	
 	private String jwt;
@@ -81,7 +86,7 @@ public class MyUI extends UI {
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+    @VaadinServletConfiguration(ui = MyUI.class, productionMode = true)
     public static class MyUIServlet extends VaadinServlet {
     }
 }
