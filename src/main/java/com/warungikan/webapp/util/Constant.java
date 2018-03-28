@@ -9,6 +9,7 @@ public class Constant {
 	public static final String VIEW_MY_PROFILE = "my_profile";
 	public static final String VIEW_CONFIRM_PAGE = "confirm_page";
 	public static final String VIEW_MY_TRANSACTION = "my_transaction";
+	public static final String ADMIN_TRX_STATS = "adm_trx_stats";
 	
 	public static final String GMAP_API_KEY = "AIzaSyBtcT4UkbfN9JV_4haAAYdQnhS-3wsedpk";
 

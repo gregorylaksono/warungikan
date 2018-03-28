@@ -22,7 +22,6 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
-import com.warungikan.webapp.component.RegisterComponent;
 import com.warungikan.webapp.model.FishShopItem;
 import com.warungikan.webapp.model.ShopItem;
 import com.warungikan.webapp.util.Constant;
@@ -77,18 +76,42 @@ public class LoginView extends VerticalLayout implements View{
 		form.setSizeUndefined();
 		
 		loginButton.addClickListener( e -> {
-			initData();
+			String text = usernameTf.getValue();
+			if(!text.isEmpty() && text.equalsIgnoreCase("admin")) {
+				initAdminData();
+			}else {				
+				initUserData();
+			}
 			
-		});
-		
-		regiterButton.addClickListener(e ->{
-			UI.getCurrent().setContent(new RegisterComponent());
 		});
 		return form;
 	}
 
 
-	private void initData() {
+	private void initAdminData() {
+		VerticalLayout root = new VerticalLayout();
+		VerticalLayout navigatorContent = new VerticalLayout();
+		
+		navigatorContent.setSizeFull();
+		
+		HorizontalLayout header = createHeader();
+		
+		root.addComponent(header);
+		root.addComponent(navigatorContent);
+		root.setExpandRatio(header, 0.0f);
+		root.setExpandRatio(navigatorContent, 1.0f);
+		root.setComponentAlignment(header, Alignment.TOP_RIGHT);
+		root.setComponentAlignment(navigatorContent, Alignment.BOTTOM_CENTER);
+		Navigator n = new Navigator (MyUI.getCurrent(), navigatorContent);
+		n.addView(Constant.ADMIN_TRX_STATS, AdminTransactionStatusView.class);
+		
+		UI.getCurrent().setNavigator(n);
+		UI.getCurrent().setContent(root);
+		n.navigateTo(Constant.ADMIN_TRX_STATS);		
+	}
+
+
+	private void initUserData() {
 		VerticalLayout root = new VerticalLayout();
 		VerticalLayout navigatorContent = new VerticalLayout();
 		
@@ -132,7 +155,7 @@ public class LoginView extends VerticalLayout implements View{
 		shoppingCart.setIcon(FontAwesome.SHOPPING_BASKET);
 		shoppingCart.addStyleName("fa-shopping-cart");
 		shoppingCart.addClickListener( e-> {
-//					((MyUI) UI.getCurrent()).setItems(items);
+					((MyUI) UI.getCurrent()).setItems(items);
 					UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_CART_DETAIL);
 				});
 		shoppingCart.addStyleName("cart-custom");
@@ -170,12 +193,7 @@ public class LoginView extends VerticalLayout implements View{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_PROFILE);
         });
         dropdown.addSeparator();
-        dropdown.addItem("Logout", e->{
-        	UI.getCurrent().getSession().close();
-        	UI.getCurrent().getPage().setLocation("/");
-//            getUI().getPage().setLocation("/");
-
-        });
+        dropdown.addItem("Logout", null);
 
         split.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
         split.addStyleName(ValoTheme.MENUBAR_SMALL);
