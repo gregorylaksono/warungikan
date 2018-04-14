@@ -1,4 +1,4 @@
-package com.warungikan.webapp.view;
+package com.warungikan.webapp.view.customer;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;

@@ -1,4 +1,4 @@
-package com.warungikan.webapp.view;
+package com.warungikan.webapp.view.agent;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class AdminTransactionStatusView extends VerticalLayout implements View {
+public class AgentTransactionStatusView extends VerticalLayout implements View {
 
 	/**
 	 * 
@@ -33,7 +33,7 @@ public class AdminTransactionStatusView extends VerticalLayout implements View {
 
 	}
 
-	public AdminTransactionStatusView() {
+	public AgentTransactionStatusView() {
 		Table t = createTabel();
 		addStyleName("product-container");
 		addComponent(t);

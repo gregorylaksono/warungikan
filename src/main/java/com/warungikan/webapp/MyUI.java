@@ -22,9 +22,9 @@ import com.vaadin.ui.Window;
 import com.warungikan.webapp.model.ShopItem;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.view.LoginView;
-import com.warungikan.webapp.view.ShippingAddressView;
-import com.warungikan.webapp.view.ShopView;
-import com.warungikan.webapp.view.ShoppingCartView;
+import com.warungikan.webapp.view.customer.ShippingAddressView;
+import com.warungikan.webapp.view.customer.ShopView;
+import com.warungikan.webapp.view.customer.ShoppingCartView;
 
 
 

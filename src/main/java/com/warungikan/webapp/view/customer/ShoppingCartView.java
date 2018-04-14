@@ -1,4 +1,4 @@
-package com.warungikan.webapp.view;
+package com.warungikan.webapp.view.customer;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
