@@ -50,4 +50,5 @@ public class Factory {
 		b.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		return b;
 	}
+	
 }

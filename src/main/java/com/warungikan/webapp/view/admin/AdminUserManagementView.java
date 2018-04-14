@@ -6,9 +6,9 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.warungikan.webapp.component.AdminUserTab;
 
-public class AdminUserManagement extends VerticalLayout implements View{
+public class AdminUserManagementView extends VerticalLayout implements View{
 
-	public AdminUserManagement() {
+	public AdminUserManagementView() {
 		addStyleName("product-container");
 		setSizeFull();
 		setMargin(true);

@@ -2,8 +2,8 @@ package com.warungikan.webapp.view.admin;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Table;
@@ -12,27 +12,30 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.themes.ValoTheme;
-import com.warungikan.webapp.dialog.TopupWallet;
+import com.warungikan.webapp.dialog.ShopItemForm;
 
-public class WalletTransaction extends VerticalLayout implements View {
+public class ShopItemView extends VerticalLayout implements View {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5926077373993667685L;
-	private static final String AMOUNT = "amount";
-	private static final String USER = "user";
-	private static final String TRX_DATE = "topup-date";
-	public WalletTransaction() {
+	private static final long serialVersionUID = -2617788425589408200L;
+	private static final String DESCRIPTION = "description";
+	private static final String PRICE = "price";
+	private static final String URL = "url";
+	private static final String NAME = "name";
+	
+	public ShopItemView() {
 		addStyleName("product-container");
 		setMargin(new MarginInfo(true, false));
 		setSizeFull();
 		
-		VerticalLayout l = createMainContent();
+		VerticalLayout l = createContent();
 		addComponent(l);
 		setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 	}
 	
-	private VerticalLayout createMainContent() {
+	private VerticalLayout createContent() {
 		VerticalLayout l = new VerticalLayout();
 		l.setSpacing(true);
 		l.setWidth(70, Unit.PERCENTAGE);
@@ -42,7 +45,7 @@ public class WalletTransaction extends VerticalLayout implements View {
 		topupButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
 		topupButton.addClickListener( e ->{
 			Window w = new Window();
-			w.setContent(new TopupWallet());
+			w.setContent(new ShopItemForm());
 			w.setClosable(true);
 			w.setResizable(false);
 			w.setDraggable(false);
@@ -64,15 +67,16 @@ public class WalletTransaction extends VerticalLayout implements View {
 	private Table createTrxTable() {
 		Table t = new Table();
 		t.setWidth(100, Unit.PERCENTAGE);
-		t.addContainerProperty(TRX_DATE, String.class, null, "Transaction on", null, Align.LEFT);
-		t.addContainerProperty(USER , String.class, null, "User", null, Align.LEFT);
-		t.addContainerProperty(AMOUNT , String.class, null, "Amount", null, Align.LEFT);
+		t.addContainerProperty(NAME, String.class, null, "Name", null, Align.LEFT);
+		t.addContainerProperty(URL , String.class, null, "URL", null, Align.LEFT);
+		t.addContainerProperty(PRICE , String.class, null, "Price", null, Align.LEFT);
+		t.addContainerProperty(DESCRIPTION , String.class, null, "Description", null, Align.LEFT);
 
 		return t;
 	}
 	@Override
 	public void enter(ViewChangeEvent event) {
-		
+
 	}
 
 }

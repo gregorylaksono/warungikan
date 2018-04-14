@@ -9,7 +9,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.VerticalLayout;
 
-public class AdminTransaction extends HorizontalLayout implements View{
+public class AdminTransactionView extends HorizontalLayout implements View{
 	/**
 	 * 
 	 */
@@ -24,7 +24,7 @@ public class AdminTransaction extends HorizontalLayout implements View{
 	private static final String STATE_DATE 		= "state_date";
 	private static final String STATE_NAME		= "state_name";
 
-	public AdminTransaction() {
+	public AdminTransactionView() {
 		addStyleName("product-container");
 		setMargin(new MarginInfo(true, false));
 		setSpacing(true);

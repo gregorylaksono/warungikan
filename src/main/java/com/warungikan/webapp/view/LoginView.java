@@ -25,9 +25,10 @@ import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.model.FishShopItem;
 import com.warungikan.webapp.model.ShopItem;
 import com.warungikan.webapp.util.Constant;
-import com.warungikan.webapp.view.admin.AdminTransaction;
-import com.warungikan.webapp.view.admin.AdminUserManagement;
-import com.warungikan.webapp.view.admin.WalletTransaction;
+import com.warungikan.webapp.view.admin.AdminTransactionView;
+import com.warungikan.webapp.view.admin.AdminUserManagementView;
+import com.warungikan.webapp.view.admin.ShopItemView;
+import com.warungikan.webapp.view.admin.WalletTransactionView;
 import com.warungikan.webapp.view.agent.AgentTransactionStatusView;
 import com.warungikan.webapp.view.customer.ConfirmationPageView;
 import com.warungikan.webapp.view.customer.MyProfileView;
@@ -118,9 +119,10 @@ public class LoginView extends VerticalLayout implements View{
 		
 		Navigator n = new Navigator (MyUI.getCurrent(), navigatorContent);
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
-		n.addView(Constant.VIEW_USERS_ADMIN, AdminUserManagement.class);
-		n.addView(Constant.VIEW_USERS_TRANSACTION, AdminTransaction.class);
-		n.addView(Constant.VIEW_WALLET_TRANSACTION, WalletTransaction.class);
+		n.addView(Constant.VIEW_USERS_ADMIN, AdminUserManagementView.class);
+		n.addView(Constant.VIEW_USERS_TRANSACTION, AdminTransactionView.class);
+		n.addView(Constant.VIEW_WALLET_TRANSACTION, WalletTransactionView.class);
+		n.addView(Constant.VIEW_SHOP_ITEM, ShopItemView.class);
 		
 		UI.getCurrent().setNavigator(n);
 		UI.getCurrent().setContent(root);
@@ -144,7 +146,7 @@ public class LoginView extends VerticalLayout implements View{
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
 		UI.getCurrent().setNavigator(n);
 		UI.getCurrent().setContent(root);
-		n.navigateTo(Constant.ADMIN_TRX_STATS);		
+		n.navigateTo(Constant.ADMIN_TRX_STATS);
 	}
 
 
@@ -262,6 +264,9 @@ public class LoginView extends VerticalLayout implements View{
         });
         dropdown.addItem("Transaction", e ->{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_USERS_TRANSACTION);
+        });
+        dropdown.addItem("Shop item", e ->{
+        	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_SHOP_ITEM);
         });
         dropdown.addSeparator();
         dropdown.addItem("Logout", null);

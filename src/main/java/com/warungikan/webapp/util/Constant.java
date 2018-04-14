@@ -13,7 +13,11 @@ public class Constant {
 	public static final String VIEW_USERS_ADMIN = "users_management";
 	public static final String VIEW_USERS_TRANSACTION = "transactions";
 	public static final String VIEW_WALLET_TRANSACTION = "wallet_transaction";
+	public static final String VIEW_SHOP_ITEM = "shop_item";
 	
 	public static final String GMAP_API_KEY = "AIzaSyBtcT4UkbfN9JV_4haAAYdQnhS-3wsedpk";
+	
+	public static final String VALIDATOR_REGEX_URL = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+	public static final String VALIDATOR_REGEX_AMOUNT = "\\d+";
 
 }
