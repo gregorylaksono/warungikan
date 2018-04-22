@@ -19,6 +19,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.warungikan.webapp.component.MapPage;
+import com.warungikan.webapp.dialog.CreateUserForm;
 import com.warungikan.webapp.model.ShopItem;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.view.LoginView;
@@ -47,6 +49,8 @@ public class MyUI extends UI {
 	private Navigator navigator;
 	
 	private String jwt;
+	
+	private String role;
 	
 	private List<ShopItem> items;
 	@Override
@@ -84,6 +88,18 @@ public class MyUI extends UI {
 			w.close();
 		}
 	}
+	
+	
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+
 
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = true)

@@ -3,6 +3,10 @@ package com.warungikan.webapp.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.ResourceAccessException;
+
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -18,10 +22,18 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
+import com.warungikan.webapp.exception.UserSessionException;
+import com.warungikan.webapp.listener._ButtonListener;
+import com.warungikan.webapp.listener._IWIButtonListener;
+import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.model.FishShopItem;
 import com.warungikan.webapp.model.ShopItem;
 import com.warungikan.webapp.util.Constant;
@@ -37,6 +49,9 @@ import com.warungikan.webapp.view.customer.ShippingAddressView;
 import com.warungikan.webapp.view.customer.ShopView;
 import com.warungikan.webapp.view.customer.ShoppingCartView;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
 
 public class LoginView extends VerticalLayout implements View{
 
@@ -44,8 +59,13 @@ public class LoginView extends VerticalLayout implements View{
 	 * 
 	 */
 	private static final long serialVersionUID = 8076026182734554951L;
-	
-	
+	Command logout = new Command() {
+		
+		@Override
+		public void menuSelected(MenuItem selectedItem) {
+			ServiceInitator.getUserService().logout();
+		}
+	};
 	public LoginView() {
 		setSizeFull();
 		VerticalLayout form = loginForm();
@@ -80,27 +100,52 @@ public class LoginView extends VerticalLayout implements View{
 		buttonLayout.setComponentAlignment(regiterButton, Alignment.MIDDLE_LEFT);
 		buttonLayout.setComponentAlignment(loginButton, Alignment.MIDDLE_RIGHT);
 		
+		usernameTf.addValidator(new StringLengthValidator("Can not authenticate", 3, 30, false));
+		passwordTf.addValidator(new StringLengthValidator("Can not authenticate", 3, 30, false));
+		
 		form.addComponent(usernameTf);
 		form.addComponent(passwordTf);
 		form.addComponent(buttonLayout);
 		form.setMargin(true);
 		form.setSizeUndefined();
 		
-		loginButton.addClickListener( e -> {
-			String text = usernameTf.getValue();
-			if(!text.isEmpty() && text.equalsIgnoreCase("admin")) {
-				initAdminData();
-			}
-			else if(!text.isEmpty() && text.equalsIgnoreCase("agent")) {
-				initAgentData();
-			}
-			else {				
-				initUserData();
-			}
+		loginButton.addClickListener(new ClickListener() {
 			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				usernameTf.validate();
+				passwordTf.validate();
+				String text = usernameTf.getValue();
+				String password = passwordTf.getValue();
+				String jwt = ServiceInitator.getUserService().login(text, password);
+
+				parseJwt(jwt);
+				String role = ((MyUI)UI.getCurrent()).getRole();
+				if(!role.isEmpty() && role.equalsIgnoreCase("admin")) {
+					initAdminData();
+				}
+				else if(!role.isEmpty() && role.equalsIgnoreCase("agent")) {
+					initAgentData();
+				}
+				else {
+					initUserData();
+				}
+			}
 		});
 		return form;
 	}
+
+	private void parseJwt(String jwt) {
+		Claims result = Jwts.parser()
+        .setSigningKey(Constant.SECRET)
+        .parseClaimsJws(jwt.replace(Constant.TOKEN_PREFIX, ""))
+        .getBody();	
+		result.getExpiration();
+		List<String> roles =  (List) result.get("ROLE");
+		((MyUI)UI.getCurrent()).setRole(roles.get(0).replace("ROLE_", ""));
+		((MyUI)UI.getCurrent()).setJwt(jwt);
+	}
+
 
 	private void initAdminData() {
 		VerticalLayout root = new VerticalLayout();
@@ -242,7 +287,7 @@ public class LoginView extends VerticalLayout implements View{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_PROFILE);
         });
         dropdown.addSeparator();
-        dropdown.addItem("Logout", null);
+        dropdown.addItem("Logout", logout);
 
         split.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
         split.addStyleName(ValoTheme.MENUBAR_SMALL);
@@ -269,7 +314,7 @@ public class LoginView extends VerticalLayout implements View{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_SHOP_ITEM);
         });
         dropdown.addSeparator();
-        dropdown.addItem("Logout", null);
+        dropdown.addItem("Logout", logout);
 
         split.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
         split.addStyleName(ValoTheme.MENUBAR_SMALL);
@@ -287,7 +332,7 @@ public class LoginView extends VerticalLayout implements View{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_TRANSACTION);
         });
         dropdown.addSeparator();
-        dropdown.addItem("Logout", null);
+        dropdown.addItem("Logout", logout);
 
         split.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
         split.addStyleName(ValoTheme.MENUBAR_SMALL);
