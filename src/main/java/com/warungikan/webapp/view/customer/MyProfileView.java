@@ -1,19 +1,37 @@
 package com.warungikan.webapp.view.customer;
 
+import java.util.Map;
+
+import org.warungikan.api.model.request.VLatLng;
+import org.warungikan.db.model.AgentData;
+import org.warungikan.db.model.User;
+
+import com.google.gson.Gson;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.warungikan.webapp.MyUI;
+import com.warungikan.webapp.component.MapPage;
+import com.warungikan.webapp.manager.ServiceInitator;
+import com.warungikan.webapp.model.RSAddName;
+import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
+import com.warungikan.webapp.util.Util;
 
 public class MyProfileView extends VerticalLayout implements View{
 
@@ -21,8 +39,82 @@ public class MyProfileView extends VerticalLayout implements View{
 	 * 
 	 */
 	private static final long serialVersionUID = 8555772573595397967L;
-
+	private Boolean isAgent = false;
+	private String sessionId;
+	private String formatedBalance;
+	private Button updateProfileBtn;
+	private TextField price_per_km;
+	private TextField email;
+	private TextField telpNo;
+	private TextArea address;
+	private TextField name;
+	private Label status;
+	private User user;
+	private AgentData agent;
+	private Button changeLocationBtn;
+	private ClickListener updateLocationListener = new ClickListener() {
+		
+		@Override
+		public void buttonClick(ClickEvent event) {
+			VerticalLayout l = new VerticalLayout();
+			Button save = Factory.createButtonOk("Save location");
+			MapPage map = new MapPage("My location", true);
+			l.setSpacing(true);
+			l.addComponent(map);
+			l.addComponent(save);
+			
+			l.setExpandRatio(map, 1.0f);
+			l.setExpandRatio(save, 0.0f);
+			l.setComponentAlignment(save, Alignment.BOTTOM_RIGHT);
+			
+			Window w = new Window();
+			w.setContent(l);
+			w.setDraggable(false);
+			w.setModal(true);
+			w.setResizable(true);
+			
+			save.addClickListener(new ClickListener() {
+				
+				@Override
+				public void buttonClick(ClickEvent event) {
+					RSAddName result = map.getResult();
+					Boolean isSaved = ServiceInitator.getUserService().updateCoordinate(sessionId, new VLatLng(result.getLatitude(), result.getLongitude()));
+					if(isSaved){
+						UI.getCurrent().removeWindow(w);
+						Notification.show("Lokasi anda berhasil diubah", Type.TRAY_NOTIFICATION);
+					}else{
+						Notification.show("Lokasi anda gagal diubah", Type.ERROR_MESSAGE);
+					}
+				}
+			});
+			UI.getCurrent().addWindow(w);
+		}
+	};
+	private ClickListener changeDataListener = new ClickListener() {
+		
+		@Override
+		public void buttonClick(ClickEvent event) {
+			address.getValue();
+			telpNo.getValue();
+			email.getValue();
+			name.getValue();
+		}
+	};
 	public MyProfileView() {
+		sessionId = ((MyUI)UI.getCurrent()).getJwt();
+		Long balance = null;
+		if(((MyUI)UI.getCurrent()).getRole().equals("AGENT")){
+			isAgent = true;
+			balance = ServiceInitator.getTransactionService().getBalanceAgent(sessionId);
+			agent = ServiceInitator.getUserService().getAgentData(sessionId);
+			user = agent.getAgent();
+		}else{
+			user = ServiceInitator.getUserService().getUser(sessionId);
+			balance = ServiceInitator.getTransactionService().getBalanceCustomer(sessionId);
+		}
+		
+		formatedBalance = Util.formatLocalAmount(balance);
+		
 		HorizontalLayout bottomLayout = new HorizontalLayout();
 		bottomLayout.setWidth(100, Unit.PERCENTAGE);
 		bottomLayout.setSpacing(true);
@@ -41,6 +133,38 @@ public class MyProfileView extends VerticalLayout implements View{
 		
 		addComponent(walletLayout);
 		addComponent(bottomLayout);
+		
+		initData();
+	}
+
+	private void initData() {
+		String statValue = null;
+		if(((MyUI)UI.getCurrent()).getRole().equals("USER")){
+			statValue = "CUSTOMER";
+		}else if(((MyUI)UI.getCurrent()).getRole().equals("AGENT")){
+			statValue = "AGENT";
+			initAgentData();
+		}else if(((MyUI)UI.getCurrent()).getRole().equals("ADMIN")){
+			statValue = "ADMIN";
+			initUserData();
+		}
+		
+		status.setValue(statValue);
+		
+	}
+
+	private void initUserData() {
+		name.setValue(user.getName());
+		address.setValue(user.getAddress());
+		telpNo.setValue(user.getTelpNo());
+		email.setValue(user.getEmail());
+	}
+
+	private void initAgentData() {
+		initUserData();
+		Map data = new Gson().fromJson(agent.getData(), Map.class);
+		String priceJson = (String) data.get(Constant.AGENT_DATA_KEY_PRICE_PER_KM);
+		price_per_km.setValue("Rp. "+Util.formatLocalAmount(Long.parseLong(priceJson)));
 	}
 
 	private VerticalLayout createWalletLayout() {
@@ -50,7 +174,7 @@ public class MyProfileView extends VerticalLayout implements View{
 		layout.setSpacing(true);
 		
 		layout.addStyleName("product-container");
-		Label header = Factory.createLabelHeaderNormal("Saldo sekarang : Rp. 450.000");
+		Label header = Factory.createLabelHeaderNormal("Saldo sekarang : Rp. "+formatedBalance);
 		Button topupButton = Factory.createButtonOk("Top up saldo");
 		
 		layout.addComponent(header);
@@ -66,18 +190,35 @@ public class MyProfileView extends VerticalLayout implements View{
 		profileForm.setMargin(true);
 		profileForm.addStyleName("product-container");
 		profileForm.setCaption("Data profile anda");
-		TextField name = new TextField("Nama");
-		TextArea address = new TextArea("Alamat");
-		TextField telpNo = new TextField("No. Telp");
-		TextField email = new TextField("Email");
-		Button updateProfile = Factory.createButtonOk("Update"); 
-
+		status = new Label("Status");
+		name = new TextField("Nama");
+		address = new TextArea("Alamat");
+		telpNo = new TextField("No. Telp");
+		email = new TextField("Email");
+		price_per_km = new TextField("Price per km");
+		updateProfileBtn = Factory.createButtonOk("Update");
+		changeLocationBtn = Factory.createButtonOk("Ubah lokasi"); 
+		
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.setSpacing(true);
+		buttonLayout.addComponent(updateProfileBtn);
+		buttonLayout.addComponent(changeLocationBtn);
+		
+		profileForm.addComponent(status);
 		profileForm.addComponent(name);
 		profileForm.addComponent(address);
 		profileForm.addComponent(telpNo);
 		profileForm.addComponent(email);
-		profileForm.addComponent(name);
-		profileForm.addComponent(updateProfile);
+		profileForm.addComponent(price_per_km);
+		profileForm.addComponent(buttonLayout);
+		price_per_km.setVisible(false);
+		
+		if(isAgent){
+			price_per_km.setVisible(true);
+		}
+		
+		changeLocationBtn.addClickListener(updateLocationListener );
+		updateProfileBtn.addClickListener(changeDataListener );
 		return profileForm;
 	}
 
@@ -86,11 +227,11 @@ public class MyProfileView extends VerticalLayout implements View{
 		authForm.setMargin(true);
 		authForm.addStyleName("product-container");
 		authForm.setCaption("Ubah password");
-		TextField username = new TextField("Username");
-		PasswordField pwdField = new PasswordField("Password");
-		PasswordField cnfPwdField = new PasswordField("Password confimation");
+		PasswordField oldPasswordField = new PasswordField("Password lama");
+		PasswordField pwdField = new PasswordField("Password baru");
+		PasswordField cnfPwdField = new PasswordField("Password baru confimation");
 		Button authPwdButton = Factory.createButtonOk("Update");
-		authForm.addComponent(username);
+		authForm.addComponent(oldPasswordField);
 		authForm.addComponent(pwdField);
 		authForm.addComponent(cnfPwdField);
 		authForm.addComponent(authPwdButton);

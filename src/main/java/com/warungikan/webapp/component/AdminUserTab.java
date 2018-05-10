@@ -23,6 +23,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
+import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.dialog.CreateUserForm;
 import com.warungikan.webapp.exception.UserSessionException;
 import com.warungikan.webapp.exception.WarungIkanNetworkException;
@@ -65,7 +66,7 @@ public class AdminUserTab extends HorizontalLayout{
 	public void initDataTable(){
 		t.removeAllItems();
 		List<User> users = null;
-		users = ServiceInitator.getUserService().getAllUsers();
+		users = ServiceInitator.getUserService().getAllUsers(((MyUI)UI.getCurrent()).getJwt());
 		DateFormat f = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 		if(users == null)return;
 		for(User u : users){

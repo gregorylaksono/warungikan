@@ -12,10 +12,12 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.PasswordField;
@@ -67,6 +69,7 @@ public class LoginView extends VerticalLayout implements View{
 		}
 	};
 	public LoginView() {
+		addStyleName("white-background");
 		setSizeFull();
 		VerticalLayout form = loginForm();
 		addComponent(form);
@@ -74,7 +77,17 @@ public class LoginView extends VerticalLayout implements View{
 	}
 
 
+	private Image createLogo() {
+		Image i = new Image();
+		i.setWidth(185, Unit.PIXELS);
+		i.setSource(new ThemeResource("images/warungikanlogo.png"));
+		return i;
+	}
+
+
 	private VerticalLayout loginForm() {
+		Image logo = createLogo();
+		
 		VerticalLayout form = new VerticalLayout();
 		form.setSpacing(true);
 		TextField usernameTf = new TextField();
@@ -100,14 +113,20 @@ public class LoginView extends VerticalLayout implements View{
 		buttonLayout.setComponentAlignment(regiterButton, Alignment.MIDDLE_LEFT);
 		buttonLayout.setComponentAlignment(loginButton, Alignment.MIDDLE_RIGHT);
 		
-		usernameTf.addValidator(new StringLengthValidator("Can not authenticate", 3, 30, false));
-		passwordTf.addValidator(new StringLengthValidator("Can not authenticate", 3, 30, false));
-		
+//		usernameTf.addValidator(new StringLengthValidator("Can not authenticate", 3, 30, false));
+//		passwordTf.addValidator(new StringLengthValidator("Can not authenticate", 3, 30, false));
+		form.addComponent(logo);
 		form.addComponent(usernameTf);
 		form.addComponent(passwordTf);
 		form.addComponent(buttonLayout);
 		form.setMargin(true);
 		form.setSizeUndefined();
+		
+		form.setComponentAlignment(logo, Alignment.BOTTOM_CENTER);
+		form.setExpandRatio(logo, 1.0f);
+		form.setExpandRatio(usernameTf, 0.0f);
+		form.setExpandRatio(passwordTf, 0.0f);
+		form.setExpandRatio(buttonLayout, 0.0f);
 		
 		loginButton.addClickListener(new ClickListener() {
 			
@@ -118,7 +137,7 @@ public class LoginView extends VerticalLayout implements View{
 				String text = usernameTf.getValue();
 				String password = passwordTf.getValue();
 				String jwt = ServiceInitator.getUserService().login(text, password);
-
+				if(jwt == null) return;
 				parseJwt(jwt);
 				String role = ((MyUI)UI.getCurrent()).getRole();
 				if(!role.isEmpty() && role.equalsIgnoreCase("admin")) {

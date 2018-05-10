@@ -2,6 +2,7 @@ package com.warungikan.webapp.dialog;
 
 import org.warungikan.db.model.User;
 
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -32,6 +33,7 @@ public class CreateUserForm extends VerticalLayout {
 	private TextField addressF;
 	private TextField addressInfoF;
 	private TextField cityF;
+	private TextField pricePerKm;
 	//	private TextField balanceF;
 	private ClickListener createUserListener = new ClickListener() {
 
@@ -44,9 +46,10 @@ public class CreateUserForm extends VerticalLayout {
 			String address = addressF.getValue();
 			String city = cityF.getValue();
 			String password = defPasswordF.getValue();
+			String price_per_km = pricePerKm.getValue();
 			RSAddName result = map.getResult();
 			
-			Boolean createUserResult = ServiceInitator.getUserService().createUser(name, email, telNo, address, city, result.getLatitude(), result.getLongitude(),password);
+			Boolean createUserResult = ServiceInitator.getUserService().createUserAgent(((MyUI)UI.getCurrent()).getJwt(),name, email, telNo, address, city, result.getLatitude(), result.getLongitude(),password, price_per_km);
 			if(createUserResult){
 				((MyUI)UI.getCurrent()).closeWindow();
 				adminUserTab.initDataTable();
@@ -65,12 +68,14 @@ public class CreateUserForm extends VerticalLayout {
 			String address = addressF.getValue();
 			String city = cityF.getValue();
 			RSAddName result = map.getResult();
-			
-			Boolean createUserResult = ServiceInitator.getUserService().updateUser(name, email, telNo, address, city, result.getLatitude(), result.getLongitude());
+			String price_per_km = pricePerKm.getValue();
+			Boolean createUserResult = ServiceInitator.getUserService().updateAgentAsAdmin(((MyUI)UI.getCurrent()).getJwt(), name, email, telNo, address, city, result.getLatitude(), result.getLongitude(), price_per_km);
 			if(createUserResult){
 				((MyUI)UI.getCurrent()).closeWindow();
 				adminUserTab.initDataTable();
-				Notification.show("Agen berhasil diubah", Type.TRAY_NOTIFICATION);
+				Notification.show("Data berhasil diubah", Type.TRAY_NOTIFICATION);
+			}else{
+				Notification.show("Terjadi kesalahan saat mengubah data", Type.ERROR_MESSAGE);
 			}
 		}
 	};
@@ -127,6 +132,7 @@ public class CreateUserForm extends VerticalLayout {
 		cityF.validate();
 		defPasswordF.validate();
 		defPasswordConfF.validate();
+		pricePerKm.validate();
 		map.validate();
 		
 		if(!defPasswordConfF.getValue().equals(defPasswordF.getValue())){
@@ -144,9 +150,11 @@ public class CreateUserForm extends VerticalLayout {
 		addressF =  Factory.createFormatedTextField("Address",5,50, "Alamat tidak sesuai format. Min 5 max 50");
 		addressInfoF =  Factory.createStandardTextField("Address info");
 		cityF =  Factory.createFormatedTextField("City", 5,20, "Kota tidak sesuai format. Min 3 max 20");
+		pricePerKm = Factory.createFormatedTextField("Price per km", 0, 5, "Harus diisi");
 		defPasswordF = Factory.createPasswordField("Default password", 3, 20, "Password tidak sesuai format. Min 3 max 20");
 		defPasswordConfF = Factory.createPasswordField("Konfirmasi password", 3, 20, "Password tidak sesuai format. Min 3 max 20");
-
+		
+		pricePerKm.addValidator(new IntegerRangeValidator("Angka tidak sesuai", 100, 10000));
 		f.setSizeUndefined();
 		
 
