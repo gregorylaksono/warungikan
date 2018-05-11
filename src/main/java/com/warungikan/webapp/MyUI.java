@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 
+import org.warungikan.db.model.ShopItem;
+import org.warungikan.db.model.User;
+
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -21,7 +24,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.warungikan.webapp.component.MapPage;
 import com.warungikan.webapp.dialog.CreateUserForm;
-import com.warungikan.webapp.model.ShopItem;
+import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.view.LoginView;
 import com.warungikan.webapp.view.customer.ShippingAddressView;
@@ -53,6 +56,12 @@ public class MyUI extends UI {
 	private String role;
 	
 	private List<ShopItem> items;
+
+	private List<ShopItemCart> cartItems;
+
+	private User user;
+
+	private User agent;
 	@Override
 	protected void init(VaadinRequest request) {
 		setContent(new LoginView());
@@ -79,8 +88,8 @@ public class MyUI extends UI {
 		return items;
 	}
 
-	public void setItems(List<ShopItem> items) {
-		this.items = items;
+	public void setItems(List<ShopItem> items2) {
+		this.items = items2;
 	}
 	
 	public void closeWindow() {
@@ -105,4 +114,31 @@ public class MyUI extends UI {
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = true)
     public static class MyUIServlet extends VaadinServlet {
     }
+
+
+
+	public void setItemsCart(List<ShopItemCart> items2) {
+		this.cartItems = items2;
+	}
+	
+	public List<ShopItemCart> getItemsCart(){
+		return this.cartItems;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+		
+	}
+	
+	public User getUser() {
+		return this.user;
+	}
+
+	public void setAgent(User agent) {
+		this.agent = agent;
+	}
+	
+	public User getAgent() {
+		return this.agent;
+	}
 }

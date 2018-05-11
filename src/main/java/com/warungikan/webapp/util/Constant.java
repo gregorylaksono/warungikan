@@ -69,6 +69,7 @@ public class Constant {
 	public static final String WS_POST_CALCULATE_AGENT_PRE = ApplicationProperties.getWsURL()+"transaction/agents";
 	public static final String WS_GET_AGENT_DATA_URL = ApplicationProperties.getWsURL()+"user/data";
 	public static final String WS_PUT_USER_COORDINATE_URL = ApplicationProperties.getWsURL()+"user/coordinate";
+	public static final String WS_POST_ADD_STOCK_URL = ApplicationProperties.getWsURL()+"shop/stock";
 	
 	public static final String GOOGLE_DIRECTION_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 	public static final String HEADER_STRING = "Authorization";

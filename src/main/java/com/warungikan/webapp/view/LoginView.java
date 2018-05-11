@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.ResourceAccessException;
+import org.warungikan.db.model.User;
 
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.navigator.Navigator;
@@ -37,7 +38,7 @@ import com.warungikan.webapp.listener._ButtonListener;
 import com.warungikan.webapp.listener._IWIButtonListener;
 import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.model.FishShopItem;
-import com.warungikan.webapp.model.ShopItem;
+import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.view.admin.AdminTransactionView;
 import com.warungikan.webapp.view.admin.AdminUserManagementView;
@@ -137,6 +138,9 @@ public class LoginView extends VerticalLayout implements View{
 				String text = usernameTf.getValue();
 				String password = passwordTf.getValue();
 				String jwt = ServiceInitator.getUserService().login(text, password);
+				User user = ServiceInitator.getUserService().getUser(jwt);
+				((MyUI)UI.getCurrent()).setUser(user);
+				
 				if(jwt == null) return;
 				parseJwt(jwt);
 				String role = ((MyUI)UI.getCurrent()).getRole();
@@ -246,16 +250,11 @@ public class LoginView extends VerticalLayout implements View{
 		header.setSpacing(true);
 		MenuBar menuBar = getMenuButton(role);
 		
-		List<ShopItem> items = new ArrayList<ShopItem>();
-		items.add(new ShopItem(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Gindara", "Netto : 200 Gr", "Rp. 30.000", "blabla"),4));
-		items.add(new ShopItem(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Gindara", "Netto : 200 Gr", "Rp. 30.000", "blabla"),4));
-		items.add(new ShopItem(new FishShopItem("http://warungikan.com/images/produk/WIN001.jpg", "Gindara", "Netto : 200 Gr", "Rp. 30.000", "blabla"),4));
 		CssLayout buttonContainer = new CssLayout();
 		Button shoppingCart = new Button("");
 		shoppingCart.setIcon(FontAwesome.SHOPPING_BASKET);
 		shoppingCart.addStyleName("fa-shopping-cart");
 		shoppingCart.addClickListener( e-> {
-					((MyUI) UI.getCurrent()).setItems(items);
 					UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_CART_DETAIL);
 				});
 		shoppingCart.addStyleName("cart-custom");

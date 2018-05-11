@@ -2,14 +2,16 @@ package com.warungikan.webapp.view.customer;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.warungikan.api.model.response.AgentStock;
+import org.warungikan.db.model.TransactionDetail;
+import org.warungikan.db.model.User;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.tapio.googlemaps.GoogleMap;
-import com.vaadin.tapio.googlemaps.client.LatLon;
-import com.vaadin.tapio.googlemaps.client.events.MarkerDragListener;
-import com.vaadin.tapio.googlemaps.client.overlays.GoogleMapMarker;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
@@ -21,8 +23,9 @@ import com.vaadin.ui.VerticalLayout;
 import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.component.AgentProductComponent;
 import com.warungikan.webapp.model.AgentProduct;
-import com.warungikan.webapp.model.ShopItem;
-import com.warungikan.webapp.model.AgentProduct.AVAILABILITY;
+import com.warungikan.webapp.model.ShopItemCart;
+import com.warungikan.webapp.service.ITransactionService;
+import com.warungikan.webapp.service.TransactionService;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
 
@@ -32,24 +35,26 @@ public class ShippingAddressView extends VerticalLayout implements View{
 	 */
 	private static final long serialVersionUID = 854928347753429074L;
 	//	private GoogleMap addressMap;
-	private List<ShopItem> items;
+	private List<ShopItemCart> items;
 	private GridLayout agentsLayout;
+	ITransactionService trxService = new TransactionService();
+	private String jwt;
+	private User user;
 
 	public ShippingAddressView() {
-		
-		this.items = ((MyUI) UI.getCurrent()).getItems();
+		this.user = ((MyUI)UI.getCurrent()).getUser();
+		this.jwt = ((MyUI)UI.getCurrent()).getJwt();
+		this.items = ((MyUI) UI.getCurrent()).getItemsCart();
 		setHeight(800, Unit.PIXELS);
 		//		addressMap = createGoogleMap();
-		
+		Set<TransactionDetail> details = convertObject(items);
+		List<AgentStock> result = trxService.getAgentBasedCustomerLocation(jwt, details);
 		List<AgentProduct> agents = new ArrayList<>();
-		agents.add(new AgentProduct("Greg", AVAILABILITY.EMPTY, "Pesona Depok", "00928237379"));
-		agents.add(new AgentProduct("Tomi", AVAILABILITY.FULL, "Beji", "0228235349"));
-		agents.add(new AgentProduct("Anggi", AVAILABILITY.FULL, "Sawangan", "9473622"));
-		agents.add(new AgentProduct("Toto", AVAILABILITY.PARTLY, "Tanjung barat", "66432233"));
-		agents.add(new AgentProduct("Sara", AVAILABILITY.FULL, "Pejaten", "774354322"));
-		agents.add(new AgentProduct("Andi", AVAILABILITY.PARTLY, "Pasar Minggu", "66880032"));
-		agents.add(new AgentProduct("Mei", AVAILABILITY.EMPTY, "Cilandak", "335689003"));
-		agents.add(new AgentProduct("Dodo", AVAILABILITY.PARTLY, "Pluit", "466722011"));
+		for(AgentStock a : result) {
+			AgentProduct p = new AgentProduct( a.getTotal_distance(), a.getUser());
+			agents.add(p);
+		}
+	
 		
 		ProgressBar pb3 = new ProgressBar();
         pb3.setIndeterminate(true);
@@ -75,10 +80,6 @@ public class ShippingAddressView extends VerticalLayout implements View{
 			}
 		};
 		
-		
-		
-		
-
 		HorizontalLayout myData = createMyData();
 		
 		
@@ -97,6 +98,17 @@ public class ShippingAddressView extends VerticalLayout implements View{
 		as.start();
 	}
 
+	private Set<TransactionDetail> convertObject(List<ShopItemCart> items2) {
+		Set<TransactionDetail> details = new HashSet<>();
+		for(ShopItemCart item: items2) {
+			TransactionDetail d = new TransactionDetail();
+			d.setAmount(item.getCount());
+			d.setItem(item.getFish());
+			details.add(d);
+		}
+		return details;
+	}
+
 	private HorizontalLayout createMyData() {
 		HorizontalLayout layout = new HorizontalLayout();
 		layout.setSpacing(true);
@@ -109,9 +121,9 @@ public class ShippingAddressView extends VerticalLayout implements View{
 		addressLayout.setSpacing(true);
 		addressLayout.setHeight(100, Unit.PERCENTAGE);
 		addressLayout.setWidth(300, Unit.PERCENTAGE);
-		Label nameL = Factory.createLabelHeaderNormal("Alfonso Herman");
-		Label fullAddressL = Factory.createLabel("Jl. Kavling timur no. 34a Cilandak barat, Jakarta selatan DKI Jakarta 15311");
-		Label telpNo = Factory.createLabel("0812 9938270");
+		Label nameL = Factory.createLabelHeaderNormal(user.getName());
+		Label fullAddressL = Factory.createLabel(user.getAddress());
+		Label telpNo = Factory.createLabel(user.getTelpNo());
 		Button changeButton = Factory.createButtonOk("Ubah");
 		changeButton.addClickListener(e ->{
 			UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_PROFILE);
@@ -174,10 +186,10 @@ public class ShippingAddressView extends VerticalLayout implements View{
 		Label priceItem = Factory.createLabelHeader("Total harga");
 		t.addComponent(productLabel);
 		t.addComponent(priceItem);
-		int totalAll = 0;
-		for(ShopItem i : items) {
+		Long totalAll = new Long(0);
+		for(ShopItemCart i : items) {
 			String product = i.getFish().getName() + " ("+i.getCount()+")";
-			Integer total = i.getCount() * Integer.parseInt(i.getFish().getPrice().replace("Rp", "").replace(".", "").replace(" ", ""));
+			Long total = i.getCount() * i.getFish().getPrice();
 			totalAll = total + totalAll;
 			Label productL = Factory.createLabel(product);
 			Label totalL = Factory.createLabel("Rp. "+ShoppingCartView.decimalFormat.format(total));

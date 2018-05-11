@@ -2,6 +2,8 @@ package com.warungikan.webapp.view.customer;
 
 import java.util.List;
 
+import org.warungikan.db.model.User;
+
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
@@ -16,7 +18,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.dialog.ConfirmPayment;
-import com.warungikan.webapp.model.ShopItem;
+import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
 import com.warungikan.webapp.window.ConfirmDialog;
@@ -96,11 +98,12 @@ public class ConfirmationPageView extends VerticalLayout implements View {
 		l.setWidth(100, Unit.PERCENTAGE);
 
 		VerticalLayout left = new VerticalLayout();
-		//		left.setSpacing(true);
+		
+		User user = ((MyUI)UI.getCurrent()).getUser();
 		left.addComponent(Factory.createLabelHeader("Pembeli"));
-		left.addComponent(Factory.createLabel("Gregory L"));
-		left.addComponent(Factory.createLabel("Pesona Depok Blok AY No. 6"));
-		left.addComponent(Factory.createLabel("081280142404"));
+		left.addComponent(Factory.createLabel(user.getName()));
+		left.addComponent(Factory.createLabel(user.getAddress()));
+		left.addComponent(Factory.createLabel(user.getTelpNo()));
 
 		VerticalLayout right = new VerticalLayout();
 		//		right.setSpacing(true);
@@ -126,10 +129,10 @@ public class ConfirmationPageView extends VerticalLayout implements View {
 	}
 
 	private GridLayout createItemsGrid() {
-		List<ShopItem> items = ((MyUI)UI.getCurrent()).getItems();
+		List<ShopItemCart> items = ((MyUI)UI.getCurrent()).getItemsCart();
 		GridLayout l = new GridLayout(3, items.size()+1);
 		l.setWidth(500, Unit.PIXELS);
-		int totalAll = 0;
+		Long totalAll = new Long(0);
 		Label hItem = Factory.createLabelHeader("Jenis ikan");
 		Label hAmount = Factory.createLabelHeader("Jumlah");
 		Label hPrice = Factory.createLabelHeader("Harga");
@@ -146,9 +149,9 @@ public class ConfirmationPageView extends VerticalLayout implements View {
 		l.addComponent(hAmount);
 		l.addComponent(hPrice);
 
-		for(ShopItem i : items) {
+		for(ShopItemCart i : items) {
 			int number = i.getCount();
-			int total = i.getCount() * Integer.parseInt(i.getFish().getPrice().replace("Rp", "").replace(".", "").replace(" ", ""));
+			Long total = i.getCount() * i.getFish().getPrice();
 			totalAll = totalAll + total;
 			Label amount = Factory.createLabel(String.valueOf(number));
 			Label fishName = Factory.createLabel(i.getFish().getName());

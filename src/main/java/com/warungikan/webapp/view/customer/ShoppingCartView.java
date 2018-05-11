@@ -23,7 +23,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
-import com.warungikan.webapp.model.ShopItem;
+import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
 
@@ -35,14 +35,14 @@ public class ShoppingCartView extends VerticalLayout implements View{
 	 */
 	private static final long serialVersionUID = 8894159587988538925L;
 	private DecimalFormatSymbols decimalSymbols = new DecimalFormatSymbols();
-	private List<ShopItem> items;
+	private List<ShopItemCart> items;
 	public static DecimalFormat decimalFormat = new DecimalFormat("###,###");
 	
 	public ShoppingCartView() {
 		setSpacing(true);
 		setMargin(true);
 		addStyleName("product-container");
-		this.items = ((MyUI)UI.getCurrent()).getItems();
+		this.items = ((MyUI)UI.getCurrent()).getItemsCart();
 		decimalSymbols.setGroupingSeparator('.');
 		decimalFormat.setDecimalFormatSymbols(decimalSymbols);
 		GridLayout grid = new GridLayout(5, items.size()+1);
@@ -94,7 +94,7 @@ public class ShoppingCartView extends VerticalLayout implements View{
 //		next.setIcon(VaadinIcons.ANGLE_RIGHT);
 		
 		next.addClickListener( e ->{
-			((MyUI)UI.getCurrent()).setItems(items);
+			((MyUI)UI.getCurrent()).setItemsCart(items);
 			UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_AGENT_SHIPMENT);
 		});
 		
@@ -114,15 +114,15 @@ public class ShoppingCartView extends VerticalLayout implements View{
 		return layout;
 	}
 
-	private void addShoppingItem(GridLayout grid, List<ShopItem> items) {
+	private void addShoppingItem(GridLayout grid, List<ShopItemCart> items) {
 		
 		for(int j=0; j<items.size();j++) {
 			int index = j;
-			ShopItem i = items.get(j);
+			ShopItemCart i = items.get(j);
 			addProductItemToGrid(grid, i);
 			addLabelItemToGrid(grid,  String.valueOf(i.getCount()));
-			addLabelItemToGrid(grid, i.getFish().getPrice());
-			String price = i.getFish().getPrice().replace("Rp", "").replace(".", "").replace(" ", "");
+			addLabelItemToGrid(grid, String.valueOf(i.getFish().getPrice()));
+			String price = String.valueOf(i.getFish().getPrice()).replace("Rp", "").replace(".", "").replace(" ", "");
 			
 			addLabelItemToGrid(grid, "Rp. "+decimalFormat.format(Long.parseLong(price) * i.getCount()));
 			
@@ -151,7 +151,7 @@ public class ShoppingCartView extends VerticalLayout implements View{
 		
 	}
 
-	private void addProductItemToGrid(GridLayout grid, ShopItem i) {
+	private void addProductItemToGrid(GridLayout grid, ShopItemCart i) {
 		VerticalLayout l = new VerticalLayout();
 		l.setMargin(false);
 		l.setSpacing(true);
@@ -159,7 +159,7 @@ public class ShoppingCartView extends VerticalLayout implements View{
 		Image img = new Image();
 		img.setHeight(80, Unit.PIXELS);
 		img.setWidth(100, Unit.PIXELS);
-		img.setSource(new ExternalResource(i.getFish().getImgUrl()));
+		img.setSource(new ExternalResource(i.getFish().getUrl()));
 		
 		l.addComponent(img);
 		l.setComponentAlignment(img, Alignment.TOP_CENTER);

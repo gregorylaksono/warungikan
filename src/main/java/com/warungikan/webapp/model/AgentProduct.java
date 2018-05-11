@@ -2,59 +2,37 @@ package com.warungikan.webapp.model;
 
 import java.io.Serializable;
 
+import org.warungikan.db.model.User;
+
 public class AgentProduct implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3670859857685271432L;
-	private String name;
-	private AVAILABILITY availability;
-	private String address;
-	private String telpNo;
-	
-	public enum AVAILABILITY{
-		PARTLY, FULL, EMPTY
+	private String km;
+	private User user;
+
+	public AgentProduct( String km, User user) {
+		this.user = user;
+		this.km= km;
 	}
 
-	public AgentProduct(String name, AVAILABILITY availability, String address, String telpNo) {
-		this.name = name;
-		this.availability = availability;
-		this.address = address;
-		this.telpNo = telpNo;
+	public String getKm() {
+		return km;
 	}
 
-	public String getName() {
-		return name;
+	public void setKm(String km) {
+		this.km = km;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public User getUser() {
+		return user;
 	}
 
-	public AVAILABILITY getAvailability() {
-		return availability;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-	public void setAvailability(AVAILABILITY availability) {
-		this.availability = availability;
-	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getTelpNo() {
-		return telpNo;
-	}
-
-	public void setTelpNo(String telpNo) {
-		this.telpNo = telpNo;
-	}
-	
-	
 }

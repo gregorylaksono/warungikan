@@ -1,18 +1,19 @@
 package com.warungikan.webapp.model;
 
-public class ShopItem {
+import org.warungikan.db.model.ShopItem;
 
-	private FishShopItem fish;
+public class ShopItemCart {
+
+	private ShopItem fish;
 	private int count;
-	public ShopItem(FishShopItem fish, int count) {
+	public ShopItemCart(ShopItem fish, int count) {
 		setFish(fish);
 		setCount(count);
-		
 	}
-	public FishShopItem getFish() {
+	public ShopItem getFish() {
 		return fish;
 	}
-	public void setFish(FishShopItem fish) {
+	public void setFish(ShopItem fish) {
 		this.fish = fish;
 	}
 	public int getCount() {
@@ -22,7 +23,7 @@ public class ShopItem {
 		this.count = count;
 	}
 	
-	public ShopItem getInstance() {
+	public ShopItemCart getInstance() {
 		return this;
 	}
 	
