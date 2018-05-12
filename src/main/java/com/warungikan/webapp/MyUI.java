@@ -17,18 +17,22 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.tapio.googlemaps.GoogleMap;
 import com.vaadin.tapio.googlemaps.client.LatLon;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.warungikan.webapp.component.MapPage;
+import com.warungikan.webapp.component.RegisterView;
 import com.warungikan.webapp.dialog.CreateUserForm;
 import com.warungikan.webapp.model.AgentProduct;
 import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.view.LoginView;
+import com.warungikan.webapp.view.VerificationView;
 import com.warungikan.webapp.view.customer.ShippingAddressView;
 import com.warungikan.webapp.view.customer.ShopView;
 import com.warungikan.webapp.view.customer.ShoppingCartView;
@@ -63,10 +67,33 @@ public class MyUI extends UI {
 	
 	private AgentProduct agentProduct;
 
+	private VerticalLayout navigatorContent;
+
+	private HorizontalLayout header;
+
+	private VerticalLayout root;
+
 	@Override
 	protected void init(VaadinRequest request) {
-		setContent(new LoginView());
-	
+		root = new VerticalLayout();
+		navigatorContent = new VerticalLayout();
+		navigatorContent.setSizeFull();
+		header = new HorizontalLayout();
+		
+		root.addComponent(header);
+		root.addComponent(navigatorContent);
+		root.setExpandRatio(header, 0.0f);
+		root.setExpandRatio(navigatorContent, 1.0f);
+		root.setComponentAlignment(header, Alignment.TOP_RIGHT);
+		root.setComponentAlignment(navigatorContent, Alignment.BOTTOM_CENTER);
+		setContent(root);
+		
+		Navigator n = new Navigator(this, navigatorContent);
+
+		n.addView(Constant.VIEW_CONFIRM_USER_PAGE, VerificationView.class);
+		n.addView(Constant.VIEW_LOGIN, LoginView.class);
+		n.addView(Constant.VIEW_REGISTER, RegisterView.class);
+		setNavigator(n);
 	}
 
 	public Navigator getNavigator() {
@@ -101,6 +128,14 @@ public class MyUI extends UI {
 	
 	
 
+	public VerticalLayout getNavigatorContent() {
+		return navigatorContent;
+	}
+
+	public void setNavigatorContent(VerticalLayout navigatorContent) {
+		this.navigatorContent = navigatorContent;
+	}
+
 	public String getRole() {
 		return role;
 	}
@@ -131,5 +166,17 @@ public class MyUI extends UI {
 	public void setAgentProduct(AgentProduct agentProduct) {
 		this.agentProduct = agentProduct;
 	}
+
+	public HorizontalLayout getHeader() {
+		return header;
+	}
+
+	public void setHeader(HorizontalLayout header) {
+		this.header = header;
+		root.removeComponent(this.header);
+		root.addComponent(header, 0);
+	}
+	
+	
 
 }

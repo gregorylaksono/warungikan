@@ -2,7 +2,7 @@ package com.warungikan.webapp.util;
 
 public class Constant {
 
-	public static final String VIEW_LOGIN = "login";
+	public static final String VIEW_LOGIN = "";
 	public static final String VIEW_SHOP = "shop";
 	public static final String VIEW_CART_DETAIL = "cart_detail";
 	public static final String VIEW_AGENT_SHIPMENT = "shippment_address";
@@ -14,6 +14,8 @@ public class Constant {
 	public static final String VIEW_USERS_TRANSACTION = "transactions";
 	public static final String VIEW_WALLET_TRANSACTION = "wallet_transaction";
 	public static final String VIEW_SHOP_ITEM = "shop_item";
+	public static final String VIEW_CONFIRM_USER_PAGE = "v_confirmation";
+	public static final String VIEW_REGISTER = "register";
 	
 	public static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
 	public static final String PLACES_API_GEOCODE = "https://maps.googleapis.com/maps/api/geocode";
@@ -29,13 +31,14 @@ public class Constant {
 	
 	
 	public static final String WS_LOGIN_URL = ApplicationProperties.getWsURL()+"login";
+	public static final String WS_VERIFY_USER_URL = ApplicationProperties.getWsURL()+"user/verify";
 	public static final String WS_GET_ALL_USER_URL = ApplicationProperties.getWsURL()+"admin/user";
 	public static final String WS_CREATE_USER_AGENT_URL = ApplicationProperties.getWsURL()+"admin/user/agent";
 	public static final String WS_CHECK_USER_AS_ADMIN_URL = ApplicationProperties.getWsURL()+"admin/user";
 	public static final String WS_UPDATE_USER_AGENT_URL = ApplicationProperties.getWsURL()+"admin/user";
 	public static final String WS_DELETE_USER_URL = ApplicationProperties.getWsURL()+"admin/user";
 	
-	public static final String WS_POST_REGISTER_USER_URL = ApplicationProperties.getWsURL()+"user";
+	public static final String WS_POST_REGISTER_USER_URL = ApplicationProperties.getWsURL()+"user/register";
 	public static final String WS_UPDATE_SELF_USER_URL = ApplicationProperties.getWsURL()+"user";
 	public static final String WS_CHECK_USER_AS_USER_URL = ApplicationProperties.getWsURL()+"user";
 	public static final String WS_CREATE_USER_CUSTOMER_URL = ApplicationProperties.getWsURL()+"admin/user/customer";
@@ -47,6 +50,7 @@ public class Constant {
 	public static final String WS_POST_CHECK_TRANSCTION_URL = ApplicationProperties.getWsURL()+"transaction/check";
 	public static final String WS_POST_ADD_TRANSCTION_URL = ApplicationProperties.getWsURL()+"transaction";
 	public static final String WS_GET_TRANSCTION_CUSTOMER_URL = ApplicationProperties.getWsURL()+"transaction/customer";
+	public static final String WS_GET_ALL_TRANSCTION_URL = ApplicationProperties.getWsURL()+"transaction/all";
 	public static final String WS_GET_TRANSCTION_AGENT_URL = ApplicationProperties.getWsURL()+"transaction/agent";
 	public static final String WS_GET_TRANSCTION_STATE_URL = ApplicationProperties.getWsURL()+"transaction/state";
 	public static final String WS_POST_TRANSCTION_MARK_PAID_URL = ApplicationProperties.getWsURL()+"transaction/mark_paid";
@@ -71,8 +75,12 @@ public class Constant {
 	public static final String WS_PUT_USER_COORDINATE_URL = ApplicationProperties.getWsURL()+"user/coordinate";
 	public static final String WS_POST_ADD_STOCK_URL = ApplicationProperties.getWsURL()+"shop/stock";
 	
+	public static final String WS_GET_TOPUP_URL = ApplicationProperties.getWsURL()+"transaction/topup";
+	public static final String WS_GET_TOPUP_USER_URL = ApplicationProperties.getWsURL()+"transaction/topup/user";
+	
 	public static final String GOOGLE_DIRECTION_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 	public static final String HEADER_STRING = "Authorization";
 	public static final String IV = "AAAAAAAAAAAAFFFF";
 	public static final String ENC_KEY = "NhzeepOXvXgSTrOxMuNMT1zHO6PQj2Gc6JnRQgMD";
+	
 }

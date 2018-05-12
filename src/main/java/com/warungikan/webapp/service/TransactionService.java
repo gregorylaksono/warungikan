@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.warungikan.api.model.response.AgentStock;
+import org.warungikan.db.model.TopupWalletHistory;
 import org.warungikan.db.model.Transaction;
 import org.warungikan.db.model.TransactionDetail;
 import org.warungikan.db.model.TransactionState;
@@ -22,9 +23,9 @@ public class TransactionService implements ITransactionService {
 
 	private TransactionManagerImpl trxManager = new TransactionManagerImpl();
 	@Override
-	public Boolean addBalanceUser(String sessionId, String userId, Long balance) {
+	public Boolean addBalanceUser(String sessionId, String userId, String balance, String topup_date, String ref_bank_no) {
 		try {
-			Boolean result = trxManager.addBalanceUser(sessionId, userId, balance);
+			Boolean result = trxManager.addBalanceUser(sessionId, userId, balance, topup_date, ref_bank_no);
 			return result;
 		} catch (UserSessionException e) {
 			logout();
@@ -197,5 +198,45 @@ public class TransactionService implements ITransactionService {
 	public void logout(){
 		Page.getCurrent().setLocation(VaadinServlet.getCurrent().getServletConfig().getServletContext().getContextPath());
 		VaadinSession.getCurrent().close();
+	}
+
+	@Override
+	public List<Transaction> getAllTransaction(String jwt) {
+		try {
+			return trxManager.getAllTransaction(jwt);
+		} catch (UserSessionException e) {
+			logout();
+			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
+		} catch (WarungIkanNetworkException e) {
+			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+		}
+		return null;
+	}
+
+	@Override
+	public List<TopupWalletHistory> getAllTopupHistory(String jwt) {
+		try {
+			return trxManager.getAllTopups(jwt);
+		}  catch (UserSessionException e) {
+			logout();
+			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
+		} catch (WarungIkanNetworkException e) {
+			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public List<TopupWalletHistory> getTopupHistorySingleUser(String jwt) {
+		try {
+			trxManager.getTopupsByUser(jwt);
+		}  catch (UserSessionException e) {
+			logout();
+			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
+		} catch (WarungIkanNetworkException e) {
+			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+		}
+		return null;
 	}
 }

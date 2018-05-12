@@ -38,7 +38,6 @@ public class AgentTransactionStatusView extends VerticalLayout implements View {
 		addStyleName("product-container");
 		addComponent(t);
 		setComponentAlignment(t, Alignment.MIDDLE_CENTER);
-		
 	}
 
 

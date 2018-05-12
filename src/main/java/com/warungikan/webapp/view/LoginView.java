@@ -129,6 +129,13 @@ public class LoginView extends VerticalLayout implements View{
 		form.setExpandRatio(passwordTf, 0.0f);
 		form.setExpandRatio(buttonLayout, 0.0f);
 		
+		regiterButton.addClickListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				((MyUI)UI.getCurrent()).getNavigator().navigateTo(Constant.VIEW_REGISTER);
+			}
+		});
 		loginButton.addClickListener(new ClickListener() {
 			
 			@Override
@@ -138,7 +145,6 @@ public class LoginView extends VerticalLayout implements View{
 				String text = usernameTf.getValue();
 				String password = passwordTf.getValue();
 				String jwt = ServiceInitator.getUserService().login(text, password);
-				User user = ServiceInitator.getUserService().getUser(jwt);
 				
 				if(jwt == null) return;
 				parseJwt(jwt);
@@ -152,6 +158,7 @@ public class LoginView extends VerticalLayout implements View{
 				else {
 					initUserData();
 				}
+				
 			}
 		});
 		return form;
@@ -170,66 +177,35 @@ public class LoginView extends VerticalLayout implements View{
 
 
 	private void initAdminData() {
-		VerticalLayout root = new VerticalLayout();
-		VerticalLayout navigatorContent = new VerticalLayout();
-		
-		navigatorContent.setSizeFull();
-		
 		HorizontalLayout header = createHeader("ADMIN");
+		((MyUI)UI.getCurrent()).setHeader(header);
 		
-		root.addComponent(header);
-		root.addComponent(navigatorContent);
-		root.setExpandRatio(header, 0.0f);
-		root.setExpandRatio(navigatorContent, 1.0f);
-		root.setComponentAlignment(header, Alignment.TOP_RIGHT);
-		root.setComponentAlignment(navigatorContent, Alignment.BOTTOM_CENTER);
+		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
 		
-		Navigator n = new Navigator (MyUI.getCurrent(), navigatorContent);
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
 		n.addView(Constant.VIEW_USERS_ADMIN, AdminUserManagementView.class);
 		n.addView(Constant.VIEW_USERS_TRANSACTION, AdminTransactionView.class);
 		n.addView(Constant.VIEW_WALLET_TRANSACTION, WalletTransactionView.class);
 		n.addView(Constant.VIEW_SHOP_ITEM, ShopItemView.class);
-		
-		UI.getCurrent().setNavigator(n);
-		UI.getCurrent().setContent(root);
 		n.navigateTo(Constant.VIEW_USERS_ADMIN);		
 	}
 	
 	private void initAgentData() {
-		VerticalLayout root = new VerticalLayout();
-		VerticalLayout navigatorContent = new VerticalLayout();
-		navigatorContent.setSizeFull();
 		HorizontalLayout header = createHeader("AGENT");
+		((MyUI)UI.getCurrent()).setHeader(header);
 		
-		root.addComponent(header);
-		root.addComponent(navigatorContent);
-		root.setExpandRatio(header, 0.0f);
-		root.setExpandRatio(navigatorContent, 1.0f);
-		root.setComponentAlignment(header, Alignment.TOP_RIGHT);
-		root.setComponentAlignment(navigatorContent, Alignment.BOTTOM_CENTER);
-		Navigator n = new Navigator (MyUI.getCurrent(), navigatorContent);
+		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
 		n.addView(Constant.ADMIN_TRX_STATS, AgentTransactionStatusView.class);
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
-		UI.getCurrent().setNavigator(n);
-		UI.getCurrent().setContent(root);
 		n.navigateTo(Constant.ADMIN_TRX_STATS);
 	}
 
 
 	private void initUserData() {
-		VerticalLayout root = new VerticalLayout();
-		VerticalLayout navigatorContent = new VerticalLayout();
-		navigatorContent.setSizeFull();
 		HorizontalLayout header = createHeader("USER");
+		((MyUI)UI.getCurrent()).setHeader(header);
 		
-		root.addComponent(header);
-		root.addComponent(navigatorContent);
-		root.setExpandRatio(header, 0.0f);
-		root.setExpandRatio(navigatorContent, 1.0f);
-		root.setComponentAlignment(header, Alignment.TOP_RIGHT);
-		root.setComponentAlignment(navigatorContent, Alignment.BOTTOM_CENTER);
-		Navigator n = new Navigator (MyUI.getCurrent(), navigatorContent);
+		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
 		n.addView(Constant.VIEW_SHOP, ShopView.class);
 		n.addView(Constant.VIEW_CART_DETAIL, ShoppingCartView.class);
 		n.addView(Constant.VIEW_AGENT_SHIPMENT, ShippingAddressView.class);
@@ -237,8 +213,6 @@ public class LoginView extends VerticalLayout implements View{
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
 		n.addView(Constant.VIEW_CONFIRM_PAGE, ConfirmationPageView.class);
 		n.addView(Constant.VIEW_MY_TRANSACTION, MyTransaction.class);
-		UI.getCurrent().setNavigator(n);
-		UI.getCurrent().setContent(root);
 		n.navigateTo(Constant.VIEW_SHOP);
 	}
 

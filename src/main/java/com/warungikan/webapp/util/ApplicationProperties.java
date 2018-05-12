@@ -14,6 +14,10 @@ public class ApplicationProperties {
 		init();
 		return prop.getProperty("ws.url");
 	}
+	public static String getAdminEmail(){
+		init();
+		return prop.getProperty("admin.email");
+	}
 	
 	private static void init(){
 		if(prop == null){

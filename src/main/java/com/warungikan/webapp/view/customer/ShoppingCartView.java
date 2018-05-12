@@ -26,6 +26,7 @@ import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
+import com.warungikan.webapp.util.Util;
 
 
 public class ShoppingCartView extends VerticalLayout implements View{
@@ -36,7 +37,7 @@ public class ShoppingCartView extends VerticalLayout implements View{
 	private static final long serialVersionUID = 8894159587988538925L;
 	private DecimalFormatSymbols decimalSymbols = new DecimalFormatSymbols();
 	private List<ShopItemCart> items;
-	public static DecimalFormat decimalFormat = new DecimalFormat("###,###");
+	
 	
 	public ShoppingCartView() {
 		setSpacing(true);
@@ -44,7 +45,6 @@ public class ShoppingCartView extends VerticalLayout implements View{
 		addStyleName("product-container");
 		this.items = ((MyUI)UI.getCurrent()).getItemsCart();
 		decimalSymbols.setGroupingSeparator('.');
-		decimalFormat.setDecimalFormatSymbols(decimalSymbols);
 		GridLayout grid = new GridLayout(5, items.size()+1);
 		grid.setSizeUndefined();
 		grid.setSpacing(true);
@@ -124,7 +124,7 @@ public class ShoppingCartView extends VerticalLayout implements View{
 			addLabelItemToGrid(grid, String.valueOf(i.getFish().getPrice()));
 			String price = String.valueOf(i.getFish().getPrice()).replace("Rp", "").replace(".", "").replace(" ", "");
 			
-			addLabelItemToGrid(grid, "Rp. "+decimalFormat.format(Long.parseLong(price) * i.getCount()));
+			addLabelItemToGrid(grid, "Rp. "+Util.formatLocalAmount(Long.parseLong(price) * i.getCount()));
 			
 			Button removeButton = new Button();
 			removeButton.addClickListener(e ->{

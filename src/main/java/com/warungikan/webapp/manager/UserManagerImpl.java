@@ -97,16 +97,16 @@ public class UserManagerImpl  {
 	public static void main(String[] args) throws TimeoutException {
 
 	}
-	public Integer createUserCustomer(String sessionId,String name, String email, String telNo, String address, String city, String latitude,
+	public Boolean createUserCustomer(String sessionId,String name, String email, String telNo, String address, String city, String latitude,
 			String longitude, String password) throws UserSessionException,WarungIkanNetworkException{
 		try {
 			User u = User.UserFactory(name, email, telNo, address, city, latitude, longitude, password);
 			RestTemplate r = new RestTemplate();
 			HttpHeaders headers = new HttpHeaders();
-			headers.add("Authorization", sessionId);
+//			headers.add("Authorization", sessionId);
 			HttpEntity request = new HttpEntity<>(u, headers);
 			ResponseEntity<BasicResponse> response = r.postForEntity(new URI(Constant.WS_POST_REGISTER_USER_URL), request, BasicResponse.class);
-			return response.getStatusCodeValue();
+			if(response.getStatusCodeValue() == 202) return true;
 		} catch (Exception e) {
 			if((e instanceof HttpClientErrorException) || (e instanceof HttpServerErrorException)){
 				throw new UserSessionException("token is wrong");
@@ -114,7 +114,7 @@ public class UserManagerImpl  {
 				throw new WarungIkanNetworkException("Could not connect to server");
 			}
 		}
-		return null;
+		return false;
 	}
 	public String createUserAgent(String sessionId,String name, String email, String telNo, String address, String city, String latitude,
 			String longitude, String password, String pricePerKm) throws UserSessionException,WarungIkanNetworkException{
@@ -296,6 +296,24 @@ public class UserManagerImpl  {
 		}
 		return null;
 	}
+	
+	public Boolean verify(String code)throws UserSessionException,WarungIkanNetworkException{
+		try {
+			RestTemplate r = new RestTemplate();
+
+			ResponseEntity<String> response = r.getForEntity(new URI(Constant.WS_VERIFY_USER_URL+"?verification_id="+code), String.class);
+			if(response.getStatusCodeValue() == 202){
+				return true;
+			}
+			if(response.getStatusCodeValue() == 401){
+				throw new UserSessionException("Could not identified user");
+			}
+			return false;
+		} catch (Exception e) {
+			throw new WarungIkanNetworkException("Could not connect to server");
+		}
+	}
+
 
 
 }

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.warungikan.api.model.response.AgentStock;
+import org.warungikan.db.model.TopupWalletHistory;
 import org.warungikan.db.model.Transaction;
 import org.warungikan.db.model.TransactionDetail;
 import org.warungikan.db.model.TransactionState;
@@ -30,14 +31,14 @@ public class TransactionManagerImpl {
 		PAID, PROCESSING, DELIVERING, RECEIVING, CANCEL
 	}
 	
-	public Boolean addBalanceUser(String sessionId, String userId, Long balance)throws UserSessionException,WarungIkanNetworkException{
+	public Boolean addBalanceUser(String sessionId, String userId, String balance, String topup_date, String ref_bank_no)throws UserSessionException,WarungIkanNetworkException{
 
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("Authorization", sessionId);
 			HttpEntity request = new HttpEntity<>(headers);
 			RestTemplate t = new RestTemplate();
-			ResponseEntity<String> response = t.postForEntity(new URI(Constant.WS_POST_ADD_BALANCE_URL+"/"+userId+"/"+String.valueOf(balance)), request, String.class);
+			ResponseEntity<String> response = t.postForEntity(new URI(Constant.WS_POST_ADD_BALANCE_URL+"?user_id="+userId+"&balance="+String.valueOf(balance))+"&topup_date="+topup_date+"&ref_bank_no="+ref_bank_no, request, String.class);
 			if(response.getStatusCodeValue() == 202){
 				return true;
 			}
@@ -324,4 +325,74 @@ public class TransactionManagerImpl {
 			throw new WarungIkanNetworkException("Could not connect to server");
 		}
 	}
+	
+	public List<Transaction> getAllTransaction(String sessionId)throws UserSessionException,WarungIkanNetworkException{
+
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", sessionId);
+			HttpEntity request = new HttpEntity<>(headers);
+			RestTemplate t = new RestTemplate();
+			
+			ResponseEntity<List<Transaction>> response = t.exchange(new URI(Constant.WS_GET_ALL_TRANSCTION_URL),HttpMethod.GET, request, new ParameterizedTypeReference<List<Transaction>>(){});
+			if(response.getStatusCodeValue() == 202){
+				return response.getBody();
+			}
+			else if(response.getStatusCodeValue() == 401){
+				throw new UserSessionException("Could not identified user");
+			}else {
+				return null;
+			}
+			
+		} catch (Exception e) {
+			throw new WarungIkanNetworkException("Could not connect to server");
+		}
+	}
+	
+	public List<TopupWalletHistory> getAllTopups(String sessionId)throws UserSessionException,WarungIkanNetworkException{
+
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", sessionId);
+			HttpEntity request = new HttpEntity<>(headers);
+			RestTemplate t = new RestTemplate();
+			
+			ResponseEntity<List<TopupWalletHistory>> response = t.exchange(new URI(Constant.WS_GET_TOPUP_URL),HttpMethod.GET, request, new ParameterizedTypeReference<List<TopupWalletHistory>>(){});
+			if(response.getStatusCodeValue() == 202){
+				return response.getBody();
+			}
+			else if(response.getStatusCodeValue() == 401){
+				throw new UserSessionException("Could not identified user");
+			}else {
+				return null;
+			}
+			
+		} catch (Exception e) {
+			throw new WarungIkanNetworkException("Could not connect to server");
+		}
+	}	
+	
+	public List<TopupWalletHistory> getTopupsByUser(String sessionId)throws UserSessionException,WarungIkanNetworkException{
+
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", sessionId);
+			HttpEntity request = new HttpEntity<>(headers);
+			RestTemplate t = new RestTemplate();
+			
+			ResponseEntity<List<TopupWalletHistory>> response = t.exchange(new URI(Constant.WS_GET_TOPUP_USER_URL),HttpMethod.GET, request, new ParameterizedTypeReference<List<TopupWalletHistory>>(){});
+			if(response.getStatusCodeValue() == 202){
+				return response.getBody();
+			}
+			else if(response.getStatusCodeValue() == 401){
+				throw new UserSessionException("Could not identified user");
+			}else {
+				return null;
+			}
+			
+		} catch (Exception e) {
+			throw new WarungIkanNetworkException("Could not connect to server");
+		}
+	}
+	
 }

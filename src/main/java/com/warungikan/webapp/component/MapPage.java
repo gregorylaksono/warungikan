@@ -101,11 +101,11 @@ public class MapPage extends VerticalLayout {
 				public void markerDragged(GoogleMapMarker draggedMarker, LatLon oldPosition) {
 					String lat = String.valueOf(draggedMarker.getPosition().getLat());
 					String lon = String.valueOf(draggedMarker.getPosition().getLon());
-					if(result == null){
+					if(MapPage.this.result == null){
 						MapPage.this.result = new RSAddName();
-						result.setLatitude(lat);
-						result.setLongitude(lon);
 					}
+					result.setLatitude(lat);
+					result.setLongitude(lon);
 				}
 			});
 			addressMap.setCenter(point);

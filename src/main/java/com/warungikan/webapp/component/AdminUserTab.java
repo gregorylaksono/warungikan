@@ -24,13 +24,15 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
+import com.warungikan.webapp.component.service.IParentWindowService;
 import com.warungikan.webapp.dialog.CreateUserForm;
 import com.warungikan.webapp.exception.UserSessionException;
 import com.warungikan.webapp.exception.WarungIkanNetworkException;
 import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.util.Factory;
+import com.warungikan.webapp.window.ConfirmDialog;
 
-public class AdminUserTab extends HorizontalLayout{
+public class AdminUserTab extends HorizontalLayout implements IParentWindowService{
 
 	/**
 	 * 
@@ -42,32 +44,33 @@ public class AdminUserTab extends HorizontalLayout{
 	private static final String EMAIL 			= "user_id";
 	private static final String DETAIL 			= "detail";
 	private static final String ROLE 			= "role";
-	private TextField balanceF;
-	private TextField lastLoginF;
-	private TextField cityF;
-	private TextField addressInfoF;
-	private TextField addressF;
-	private TextField telNoF;
-	private TextField emailF;
-	private TextField nameF;
+//	private TextField balanceF;
+//	private TextField lastLoginF;
+//	private TextField cityF;
+//	private TextField addressInfoF;
+//	private TextField addressF;
+//	private TextField telNoF;
+//	private TextField emailF;
+//	private TextField nameF;
+	private DateFormat f = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 	private Table t;
-	
 	public AdminUserTab() {
 		setSizeFull();
 		setSpacing(true);
 		setMargin(new MarginInfo(true, false));
-		VerticalLayout table = generateTable();
-		addComponent(table);
 		initDataTable();
 	}
 	
 	
 
 	public void initDataTable(){
+		
+		removeAllComponents();
+		addComponent(generateTable());
 		t.removeAllItems();
 		List<User> users = null;
 		users = ServiceInitator.getUserService().getAllUsers(((MyUI)UI.getCurrent()).getJwt());
-		DateFormat f = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+		
 		if(users == null)return;
 		for(User u : users){
 			Item i = t.addItem(u.getId());
@@ -96,7 +99,7 @@ public class AdminUserTab extends HorizontalLayout{
 		createAgentButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		
 		createAgentButton.addClickListener( e->{
-			
+			new ConfirmDialog(new CreateUserForm(AdminUserTab.this, null)).show();;
 		});
 		
 		t = new Table();
@@ -121,14 +124,11 @@ public class AdminUserTab extends HorizontalLayout{
 		l.setExpandRatio(createAgentButton, 0.0f);
 		return l;
 	}
-	
-	public void agentWindow(User user){
-		Window w = new Window();
-		w.setResizable(false);
-		w.setModal(true);
-		w.setDraggable(false);
-		w.setContent(new CreateUserForm(AdminUserTab.this, user));
-		UI.getCurrent().addWindow(w);
+
+	@Override
+	public void update() {
+		
+		initDataTable();
 	}
 
 }

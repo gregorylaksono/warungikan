@@ -8,8 +8,12 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import com.warungikan.webapp.MyUI;
+import com.warungikan.webapp.component.service.IParentWindowService;
+import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.util.Constant;
 
 public class ShopItemForm extends VerticalLayout {
@@ -18,8 +22,12 @@ public class ShopItemForm extends VerticalLayout {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String jwt;
+	private IParentWindowService parent;
 	
-	public ShopItemForm() {
+	public ShopItemForm(IParentWindowService p) {
+		this.parent = p;
+		this.jwt = ((MyUI)UI.getCurrent()).getJwt();
 		setSizeUndefined();
 		FormLayout f = createForm();
 		
@@ -30,51 +38,59 @@ public class ShopItemForm extends VerticalLayout {
 		FormLayout f = new FormLayout();
 		f.setSizeUndefined();
 		f.setMargin(true);
-		TextField name = new TextField("Name");
-		TextField url = new TextField("URL");
-		TextField price = new TextField("Price");
-		TextArea description = new TextArea("Description");
+		TextField nameF = new TextField("Name");
+		TextField urlF = new TextField("URL");
+		TextField priceF = new TextField("Price");
+		TextArea descriptionF = new TextArea("Description");
 		
 		Button submit = new Button("Submit");
 		submit.addStyleName(ValoTheme.BUTTON_TINY);
 		submit.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		
-		name.setRequired(true);
-		url.setRequired(true);
-		price.setRequired(true);
-		description.setRequired(true);
+		nameF.setRequired(true);
+		urlF.setRequired(true);
+		priceF.setRequired(true);
+		descriptionF.setRequired(true);
 		
-		name.setValidationVisible(true);
-		url.setValidationVisible(true);
-		price.setValidationVisible(true);
-		description.setValidationVisible(true);
+		nameF.setValidationVisible(true);
+		urlF.setValidationVisible(true);
+		priceF.setValidationVisible(true);
+		descriptionF.setValidationVisible(true);
 		
-		name.setImmediate(true);
-		url.setImmediate(true);
-		description.setImmediate(true);
-		price.setImmediate(true);
+		nameF.setImmediate(true);
+		urlF.setImmediate(true);
+		descriptionF.setImmediate(true);
+		priceF.setImmediate(true);
 		
 		
-		name.addValidator(new StringLengthValidator("Name muss be 3-15 character (was {0}). ", 3, 15, false));
-		url.addValidator(new StringLengthValidator("URL muss be 5-15 character (was {0}). ", 3, 15, false));
-		url.addValidator(new RegexpValidator(Constant.VALIDATOR_REGEX_URL, "URL muss be with format http://.. or https://.." ));
-		price.addValidator(new RegexpValidator(Constant.VALIDATOR_REGEX_AMOUNT, "Price muss be numeric"));
-		description.addValidator(new StringLengthValidator("Description muss be 10-200 character (was {0}). ", 10, 200, false));
+		nameF.addValidator(new StringLengthValidator("Name muss be 3-15 character (was {0}). ", 3, 15, false));
+		urlF.addValidator(new StringLengthValidator("URL muss be 5-15 character (was {0}). ", 3, 70, false));
+		urlF.addValidator(new RegexpValidator(Constant.VALIDATOR_REGEX_URL, "URL muss be with format http://.. or https://.." ));
+		priceF.addValidator(new RegexpValidator(Constant.VALIDATOR_REGEX_AMOUNT, "Price muss be numeric"));
+		descriptionF.addValidator(new StringLengthValidator("Description muss be 10-200 character (was {0}). ", 10, 200, false));
 		
-		f.addComponent(name);
-		f.addComponent(url);
-		f.addComponent(price);
-		f.addComponent(description);
+		f.addComponent(nameF);
+		f.addComponent(urlF);
+		f.addComponent(priceF);
+		f.addComponent(descriptionF);
 		f.addComponent(submit);
 		
 		submit.addClickListener(e->{
 			try{
-				name.validate();
-				url.validate();
-				price.validate();
-				description.validate();				
+				nameF.validate();
+				urlF.validate();
+				priceF.validate();
+				descriptionF.validate();
+				
+				Boolean result = ServiceInitator.getShopItemService().createShopItem(jwt, nameF.getValue(), descriptionF.getValue(), urlF.getValue(), priceF.getValue());
+				if(result){
+					Notification.show("Item berhasil dimasukan", Type.TRAY_NOTIFICATION);
+				}
 			}catch(Exception ex){
 				Notification.show("Input is not valid", Type.ERROR_MESSAGE);
+			}finally{
+				((MyUI)UI.getCurrent()).closeWindow();
+				parent.update();
 			}
 		});
 		

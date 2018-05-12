@@ -12,7 +12,8 @@ import com.warungikan.webapp.exception.WarungIkanNetworkException;
 import com.warungikan.webapp.exception.UserSessionException;
 
 public interface IUserService {
-
+	public Boolean createUserCustomer(String sessionId,String name, String email, String telNo, String address, String city, String latitude,
+			String longitude, String password);
 	public String login(String username, String password) ;
 	public List<User> getAllUsers(String sessionId);
 	public void logout();
@@ -25,4 +26,5 @@ public interface IUserService {
 	public User getUser(String jwt);
 	public AgentData getAgentData(String sessionId);
 	public Boolean updateCoordinate(String jwt,VLatLng coordinate);
+	public Boolean verifyUser(String code);
 }

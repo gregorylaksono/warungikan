@@ -31,6 +31,7 @@ import com.warungikan.webapp.service.ITransactionService;
 import com.warungikan.webapp.service.TransactionService;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
+import com.warungikan.webapp.util.Util;
 
 public class ShippingAddressView extends VerticalLayout implements View{
 	/**
@@ -201,12 +202,12 @@ public class ShippingAddressView extends VerticalLayout implements View{
 			Long total = i.getCount() * i.getFish().getPrice();
 			totalAll = total + totalAll;
 			Label productL = Factory.createLabel(product);
-			Label totalL = Factory.createLabel("Rp. "+ShoppingCartView.decimalFormat.format(total));
+			Label totalL = Factory.createLabel("Rp. "+Util.formatLocalAmount(total));
 			t.addComponent(productL);
 			t.addComponent(totalL);
 		}
 		Label empty = new Label("");
-		Label totalAllL = Factory.createLabel("Rp. "+ShoppingCartView.decimalFormat.format(totalAll));
+		Label totalAllL = Factory.createLabel("Rp. "+Util.formatLocalAmount(totalAll));
 		t.addComponent(empty);
 		t.addComponent(totalAllL);
 		return t;

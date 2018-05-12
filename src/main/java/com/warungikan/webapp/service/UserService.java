@@ -133,5 +133,30 @@ public class UserService implements IUserService{
 		return null;
 	}
 
+	@Override
+	public Boolean verifyUser(String code) {
+		try {
+			return	userManager.verify(code);
+		} catch (UserSessionException e) {
+			return false;
+		} catch (WarungIkanNetworkException e) {
+			return false;
+		}
+	}
+
+	@Override
+	public Boolean createUserCustomer(String sessionId, String name, String email, String telNo, String address,
+			String city, String latitude, String longitude, String password) {
+		try {
+			return userManager.createUserCustomer(sessionId, name, email, telNo, address, city, latitude, longitude, password);
+		} catch (UserSessionException e) {
+			logout();
+			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
+		} catch (WarungIkanNetworkException e) {
+			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+		}
+		return false;
+	}
+
 
 }

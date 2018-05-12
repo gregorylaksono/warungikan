@@ -17,6 +17,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.component.AdminUserTab;
 import com.warungikan.webapp.component.MapPage;
+import com.warungikan.webapp.component.service.IParentWindowService;
 import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.model.RSAddName;
 import com.warungikan.webapp.util.Factory;
@@ -45,16 +46,25 @@ public class CreateUserForm extends VerticalLayout {
 			String telNo = telNoF.getValue();
 			String address = addressF.getValue();
 			String city = cityF.getValue();
-			String password = defPasswordF.getValue();
+//			String password = defPasswordF.getValue();
 			String price_per_km = pricePerKm.getValue();
 			RSAddName result = map.getResult();
+			Integer pricePerKm = null;
+			try{
+				pricePerKm = Integer.parseInt(price_per_km);
+			}catch(Exception e){
+				Notification.show("Price per km musti angka", Type.ERROR_MESSAGE);
+				return;
+			}
 			
-			Boolean createUserResult = ServiceInitator.getUserService().createUserAgent(((MyUI)UI.getCurrent()).getJwt(),name, email, telNo, address, city, result.getLatitude(), result.getLongitude(),password, price_per_km);
+			Boolean createUserResult = ServiceInitator.getUserService().createUserAgent(((MyUI)UI.getCurrent()).getJwt(),name, email, telNo, address, city, result.getLatitude(), result.getLongitude(),null, price_per_km);
 			if(createUserResult){
 				((MyUI)UI.getCurrent()).closeWindow();
-				adminUserTab.initDataTable();
 				Notification.show("Agen berhasil dibuat", Type.TRAY_NOTIFICATION);
+			}else{
+				Notification.show("Terjadi kesalahan ketika membuat agent", Type.ERROR_MESSAGE);
 			}
+			adminUserTab.update();
 		}
 	};
 	private ClickListener updateUserListener = new ClickListener() {
@@ -69,24 +79,31 @@ public class CreateUserForm extends VerticalLayout {
 			String city = cityF.getValue();
 			RSAddName result = map.getResult();
 			String price_per_km = pricePerKm.getValue();
+			Integer pricePerKm = null;
+			try{
+				pricePerKm = Integer.parseInt(price_per_km);
+			}catch(Exception e){
+				Notification.show("Price per km musti angka", Type.ERROR_MESSAGE);
+				return;
+			}
 			Boolean createUserResult = ServiceInitator.getUserService().updateAgentAsAdmin(((MyUI)UI.getCurrent()).getJwt(), name, email, telNo, address, city, result.getLatitude(), result.getLongitude(), price_per_km);
 			if(createUserResult){
 				((MyUI)UI.getCurrent()).closeWindow();
-				adminUserTab.initDataTable();
 				Notification.show("Data berhasil diubah", Type.TRAY_NOTIFICATION);
 			}else{
 				Notification.show("Terjadi kesalahan saat mengubah data", Type.ERROR_MESSAGE);
 			}
+			adminUserTab.update();
 		}
 	};
 	private MapPage map;
-	private PasswordField defPasswordF;
-	private PasswordField defPasswordConfF;
-	private AdminUserTab adminUserTab;
+//	private PasswordField defPasswordF;
+//	private PasswordField defPasswordConfF;
+	private IParentWindowService adminUserTab;
 	private User user;
 	private Button createUser;
 
-	public CreateUserForm(AdminUserTab adminUserTab, User user) {
+	public CreateUserForm(IParentWindowService adminUserTab, User user) {
 		this.user = user;
 		setSpacing(true);
 		setMargin(true);
@@ -104,22 +121,24 @@ public class CreateUserForm extends VerticalLayout {
 
 	private void initModeWindow() {
 		//Update mode
-		if(user != null && user.getId() != null){
-			nameF.setValue(user.getName());
-			emailF.setValue(user.getEmail());
-			telNoF.setValue(user.getTelpNo());
-			addressF.setValue(user.getAddress());
-			if(user.getAddressInfo()!=null){
-				user.setAddressInfo(user.getAddressInfo());  
-			}else{
-				user.setAddressInfo("");
+		if(user != null) {
+			if(user.getId() != null){
+				nameF.setValue(user.getName());
+				emailF.setValue(user.getEmail());
+				telNoF.setValue(user.getTelpNo());
+				addressF.setValue(user.getAddress());
+				if(user.getAddressInfo()!=null){
+					user.setAddressInfo(user.getAddressInfo());  
+				}else{
+					user.setAddressInfo("");
+				}
+				cityF.setValue(user.getCity());
+//				this.removeComponent(defPasswordF);
+//				this.removeComponent(defPasswordConfF);
+				
+				map.setCoordinate(user.getName(), user.getLatitude(), user.getLongitude());
+				createUser.addClickListener(updateUserListener);
 			}
-			cityF.setValue(user.getCity());
-			this.removeComponent(defPasswordF);
-			this.removeComponent(defPasswordConfF);
-			
-			map.setCoordinate(user.getName(), user.getLatitude(), user.getLongitude());
-			createUser.addClickListener(updateUserListener);
 		}
 		
 	}
@@ -130,15 +149,15 @@ public class CreateUserForm extends VerticalLayout {
 		telNoF.validate();
 		addressF.validate();
 		cityF.validate();
-		defPasswordF.validate();
-		defPasswordConfF.validate();
+//		defPasswordF.validate();
+//		defPasswordConfF.validate();
 		pricePerKm.validate();
 		map.validate();
 		
-		if(!defPasswordConfF.getValue().equals(defPasswordF.getValue())){
-			Notification.show("Password tidak sesuai", Type.ERROR_MESSAGE);
-			return false;
-		}
+//		if(!defPasswordConfF.getValue().equals(defPasswordF.getValue())){
+//			Notification.show("Password tidak sesuai", Type.ERROR_MESSAGE);
+//			return false;
+//		}
 		return true;
 	}
 
@@ -150,11 +169,11 @@ public class CreateUserForm extends VerticalLayout {
 		addressF =  Factory.createFormatedTextField("Address",5,50, "Alamat tidak sesuai format. Min 5 max 50");
 		addressInfoF =  Factory.createStandardTextField("Address info");
 		cityF =  Factory.createFormatedTextField("City", 5,20, "Kota tidak sesuai format. Min 3 max 20");
-		pricePerKm = Factory.createFormatedTextField("Price per km", 0, 5, "Harus diisi");
-		defPasswordF = Factory.createPasswordField("Default password", 3, 20, "Password tidak sesuai format. Min 3 max 20");
-		defPasswordConfF = Factory.createPasswordField("Konfirmasi password", 3, 20, "Password tidak sesuai format. Min 3 max 20");
+		pricePerKm = Factory.createStandardTextField("Price per km");
+//		defPasswordF = Factory.createPasswordField("Default password", 3, 20, "Password tidak sesuai format. Min 3 max 20");
+//		defPasswordConfF = Factory.createPasswordField("Konfirmasi password", 3, 20, "Password tidak sesuai format. Min 3 max 20");
 		
-		pricePerKm.addValidator(new IntegerRangeValidator("Angka tidak sesuai", 100, 10000));
+//		pricePerKm.addValidator(new IntegerRangeValidator("Angka tidak sesuai", 100, 10000));
 		f.setSizeUndefined();
 		
 
@@ -164,8 +183,7 @@ public class CreateUserForm extends VerticalLayout {
 		f.addComponent(addressF);
 		f.addComponent(addressInfoF);
 		f.addComponent(cityF);
-		f.addComponent(defPasswordF);
-		f.addComponent(defPasswordConfF);
+		f.addComponent(pricePerKm);
 
 		return f;
 	}
