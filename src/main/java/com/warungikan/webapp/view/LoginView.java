@@ -139,7 +139,6 @@ public class LoginView extends VerticalLayout implements View{
 				String password = passwordTf.getValue();
 				String jwt = ServiceInitator.getUserService().login(text, password);
 				User user = ServiceInitator.getUserService().getUser(jwt);
-				((MyUI)UI.getCurrent()).setUser(user);
 				
 				if(jwt == null) return;
 				parseJwt(jwt);

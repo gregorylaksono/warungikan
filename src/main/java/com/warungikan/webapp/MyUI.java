@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 
+import org.warungikan.db.model.AgentData;
 import org.warungikan.db.model.ShopItem;
 import org.warungikan.db.model.User;
 
@@ -24,6 +25,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.warungikan.webapp.component.MapPage;
 import com.warungikan.webapp.dialog.CreateUserForm;
+import com.warungikan.webapp.model.AgentProduct;
 import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.view.LoginView;
@@ -58,10 +60,9 @@ public class MyUI extends UI {
 	private List<ShopItem> items;
 
 	private List<ShopItemCart> cartItems;
+	
+	private AgentProduct agentProduct;
 
-	private User user;
-
-	private User agent;
 	@Override
 	protected void init(VaadinRequest request) {
 		setContent(new LoginView());
@@ -115,8 +116,6 @@ public class MyUI extends UI {
     public static class MyUIServlet extends VaadinServlet {
     }
 
-
-
 	public void setItemsCart(List<ShopItemCart> items2) {
 		this.cartItems = items2;
 	}
@@ -125,20 +124,12 @@ public class MyUI extends UI {
 		return this.cartItems;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-		
-	}
-	
-	public User getUser() {
-		return this.user;
+	public AgentProduct getAgentProduct() {
+		return agentProduct;
 	}
 
-	public void setAgent(User agent) {
-		this.agent = agent;
+	public void setAgentProduct(AgentProduct agentProduct) {
+		this.agentProduct = agentProduct;
 	}
-	
-	public User getAgent() {
-		return this.agent;
-	}
+
 }

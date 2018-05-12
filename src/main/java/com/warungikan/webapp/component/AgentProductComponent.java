@@ -4,9 +4,11 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.dialog.ConfirmPayment;
@@ -26,8 +28,12 @@ public class AgentProductComponent extends VerticalLayout{
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			((MyUI)UI.getCurrent()).setAgent(agentProduct.getUser());
+			((MyUI)UI.getCurrent()).setAgentProduct(agentProduct);
+			Window w = createDialogConfirmation();
+			UI.getCurrent().addWindow(w);
 		}
+
+		
 	};
 
 	public AgentProductComponent(AgentProduct agentProduct) {
@@ -37,7 +43,7 @@ public class AgentProductComponent extends VerticalLayout{
 		setSpacing(true);
 		Label nameL = Factory.createLabel("Nama: "+agentProduct.getUser().getName());
 		Label addressL = Factory.createLabel("Alamat: "+agentProduct.getUser().getAddress());
-		Label distanceL = Factory.createLabel("Jarak "+agentProduct.getKm());;
+		Label distanceL = Factory.createLabel("Jarak "+agentProduct.getDistance());;
 		Button choose = Factory.createButtonOk("Pilih");
 		choose.addClickListener(e->{
 			UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_CONFIRM_PAGE);
@@ -54,4 +60,47 @@ public class AgentProductComponent extends VerticalLayout{
 		choose.addClickListener(chooseListener );
 	}
 
+	private Window createDialogConfirmation() {
+		VerticalLayout l = new VerticalLayout();
+		l.setSpacing(true);
+		l.setMargin(true);
+		HorizontalLayout h = new HorizontalLayout();
+		h.setWidth(100, Unit.PERCENTAGE);
+		h.setSpacing(true);
+		Label caption = Factory.createLabel("Agent berhasil dipilih. ");
+		Button continueShop = Factory.createButtonOk("Lanjut belanja");
+		Button payNow = Factory.createButtonNormal("Ke pembayaran");
+		h.addComponent(continueShop);
+		h.addComponent(payNow);
+		h.setComponentAlignment(continueShop, Alignment.BOTTOM_CENTER);
+		h.setComponentAlignment(payNow, Alignment.BOTTOM_CENTER);
+		
+		continueShop.addClickListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_SHOP_ITEM);
+				((MyUI)UI.getCurrent()).closeWindow();
+			}
+		});
+		
+		payNow.addClickListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_CONFIRM_PAGE);
+				((MyUI)UI.getCurrent()).closeWindow();
+			}
+		});
+		
+		l.addComponent(caption);
+		l.addComponent(h);
+		
+		Window w = new Window();
+		w.setModal(true);
+		w.setResizable(false);
+		w.setDraggable(false);
+		w.setContent(l);
+		return w;
+	}
 }

@@ -10,20 +10,22 @@ public class AgentProduct implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -3670859857685271432L;
-	private String km;
+	private Long distance;
+	private String price_per_km;
 	private User user;
 
-	public AgentProduct( String km, User user) {
+	public AgentProduct( Long km,String price_per_km, User user) {
 		this.user = user;
-		this.km= km;
+		this.distance= km;
+		this.price_per_km = price_per_km;
 	}
 
-	public String getKm() {
-		return km;
+	public Long getDistance() {
+		return distance;
 	}
 
-	public void setKm(String km) {
-		this.km = km;
+	public void setDistance(Long distance) {
+		this.distance = distance;
 	}
 
 	public User getUser() {
@@ -32,6 +34,14 @@ public class AgentProduct implements Serializable{
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getPricePerKM() {
+		return price_per_km;
+	}
+
+	public void setPricePerKM(String price_per_km) {
+		this.price_per_km = price_per_km;
 	}
 
 

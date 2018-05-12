@@ -2,9 +2,11 @@ package com.warungikan.webapp.view.customer;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.warungikan.api.model.response.AgentStock;
 import org.warungikan.db.model.TransactionDetail;
@@ -22,6 +24,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.component.AgentProductComponent;
+import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.model.AgentProduct;
 import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.service.ITransactionService;
@@ -42,7 +45,7 @@ public class ShippingAddressView extends VerticalLayout implements View{
 	private User user;
 
 	public ShippingAddressView() {
-		this.user = ((MyUI)UI.getCurrent()).getUser();
+		this.user = ServiceInitator.getUserService().getUser(jwt);
 		this.jwt = ((MyUI)UI.getCurrent()).getJwt();
 		this.items = ((MyUI) UI.getCurrent()).getItemsCart();
 		setHeight(800, Unit.PIXELS);
@@ -51,7 +54,7 @@ public class ShippingAddressView extends VerticalLayout implements View{
 		List<AgentStock> result = trxService.getAgentBasedCustomerLocation(jwt, details);
 		List<AgentProduct> agents = new ArrayList<>();
 		for(AgentStock a : result) {
-			AgentProduct p = new AgentProduct( a.getTotal_distance(), a.getUser());
+			AgentProduct p = new AgentProduct( Long.parseLong(a.getTotal_distance()), a.getTransport_price_per_km(), a.getUser());
 			agents.add(p);
 		}
 	
@@ -144,7 +147,7 @@ public class ShippingAddressView extends VerticalLayout implements View{
 	}
 
 	private GridLayout createAgentsLayout(List<AgentProduct> agents) {
-		
+		agents = agents.stream().sorted((o1, o2) -> o1.getDistance().compareTo(o2.getDistance())).collect(Collectors.toList());
 		GridLayout g = new GridLayout(4, 6);
 		g.setSpacing(true);
 		g.setMargin(true);
@@ -158,23 +161,29 @@ public class ShippingAddressView extends VerticalLayout implements View{
 		return g;
 	}
 
-	//	private GoogleMap createGoogleMap() {
-	//		GoogleMap map = new GoogleMap(Constant.GMAP_API_KEY, null, "english");
-	//		LatLon l = new LatLon(-6.393239, 106.824532);
-	//		GoogleMapMarker marker = map.addMarker("DRAGGABLE: "+"RUMAHKU", l, true, "VAADIN/fish.png");
-	//		map.addMarkerDragListener((e,v)->{
-	//			
-	//		});
-	//		
-	//		marker.setCaption("GREG");
-	//		marker.setAnimationEnabled(true);
-	//		map.setSizeFull();
-	//		map.setMinZoom(4);
-	//		map.setMaxZoom(16);
-	//		map.setCenter(l);
-	//		map.setZoom(16);
-	//		return map;
-	//	}
+	public static void main(String[] args) {
+		List<AgentProduct> agents = new ArrayList();
+		agents.add(new AgentProduct(new Long("200"), "3000", null));
+		agents.add(new AgentProduct(new Long("1500"), "3100", null));
+		agents.add(new AgentProduct(new Long("30000"), "3300", null));
+		agents.add(new AgentProduct(new Long("40000"), "5000", null));
+		agents.add(new AgentProduct(new Long("10610"), "5000", null));
+		agents.add(new AgentProduct(new Long("6100"), "5000", null));
+		agents.add(new AgentProduct(new Long("4500"), "5000", null));
+		agents.add(new AgentProduct(new Long("911"), "5000", null));
+		agents.add(new AgentProduct(new Long("7611"), "1000", null));
+		agents.add(new AgentProduct(new Long("9011"), "1000", null));
+		agents.add(new AgentProduct(new Long("18221"), "1000", null));
+		agents.add(new AgentProduct(new Long("9221"), "1000", null));
+		agents.add(new AgentProduct(new Long("40321"), "1000", null));
+		agents.add(new AgentProduct(new Long("8821"), "2500", null));
+		agents.add(new AgentProduct(new Long("100"), "2700", null));
+		agents.add(new AgentProduct(new Long("501"), "2300", null));
+		
+		agents = agents.stream().sorted((o1,o2)-> o1.getDistance().compareTo(o2.getDistance())  ).collect(Collectors.toList());
+		
+		
+	}
 
 	private GridLayout createItemsGrid() {
 		GridLayout t = new GridLayout(2, items.size() + 2);
