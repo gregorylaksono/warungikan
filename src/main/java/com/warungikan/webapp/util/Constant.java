@@ -16,6 +16,7 @@ public class Constant {
 	public static final String VIEW_SHOP_ITEM = "shop_item";
 	public static final String VIEW_CONFIRM_USER_PAGE = "v_confirmation";
 	public static final String VIEW_REGISTER = "register";
+	public static final String VIEW_ITEM_STOCK = "item_stock";
 	
 	public static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
 	public static final String PLACES_API_GEOCODE = "https://maps.googleapis.com/maps/api/geocode";
