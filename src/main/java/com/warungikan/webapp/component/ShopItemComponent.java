@@ -25,6 +25,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.model.FishShopItem;
 import com.warungikan.webapp.model.ShopItemCart;
+import com.warungikan.webapp.util.Util;
 
 
 public class ShopItemComponent extends VerticalLayout{
@@ -39,17 +40,21 @@ public class ShopItemComponent extends VerticalLayout{
 		@Override
 		public void buttonClick(ClickEvent event) {
 			List<ShopItemCart> cart = ((MyUI)UI.getCurrent()).getItemsCart();
-			if(cart == null) new ArrayList();
+			if(cart == null) cart = new ArrayList();
 			List<ShopItemCart> single = cart.stream().filter(f -> f.getFish().getName().equals(fish.getName())).collect(Collectors.toList());
+			Integer num = Integer.parseInt(numberTf.getValue());
 			if(single.size() == 1) {
 				ShopItemCart item = single.get(0);
-				Integer num = Integer.parseInt(numberTf.getValue());
 				item.setCount(item.getCount()+num);
 				cart.remove(item);
 				cart.add(item);
-				((MyUI)UI.getCurrent()).setItemsCart(cart);
-				Notification.show("Berhasil dimasukan ke keranjang", Type.TRAY_NOTIFICATION);
+				
+			}else{
+				cart.add(new ShopItemCart(fish, num));
 			}
+			((MyUI)UI.getCurrent()).setItemsCart(cart);
+			Notification.show("Berhasil dimasukan ke keranjang", Type.HUMANIZED_MESSAGE);
+			numberTf.setValue("0");
 		}
 		
 	};
@@ -57,7 +62,7 @@ public class ShopItemComponent extends VerticalLayout{
 
 	public ShopItemComponent(ShopItem fish) {
 		addStyleName("fitem-component");
-		setHeight(300, Unit.PIXELS);
+		setHeight(250, Unit.PIXELS);
 		setWidth(280, Unit.PIXELS);
 		this.fish = fish;
 		setMargin(false);
@@ -66,7 +71,7 @@ public class ShopItemComponent extends VerticalLayout{
 		
 		Image img = new Image();
 		img.setWidth(100,Unit.PERCENTAGE);
-		img.setHeight(140,Unit.PIXELS);
+		img.setHeight(120,Unit.PIXELS);
 		img.setSource(new ExternalResource(fish.getUrl()));
 		
 		addComponent(img);
@@ -77,13 +82,13 @@ public class ShopItemComponent extends VerticalLayout{
 		name.setWidth(null);
 		addComponent(name);
 		
-		Label weight = new Label(fish.getWeight());
+		Label weight = new Label(String.valueOf(fish.getWeight())+" gr");
 		weight.addStyleName(ValoTheme.LABEL_SMALL);
 		weight.setWidth(null);
 		addComponent(weight);
 		
 		
-		Label price = new Label("Rp."+String.valueOf(fish.getPrice()));
+		Label price = new Label("Rp."+String.valueOf(Util.formatLocalAmount(fish.getPrice())));
 		price.addStyleName(ValoTheme.LABEL_SMALL);
 		price.setWidth(null);
 		addComponent(price);
@@ -91,7 +96,7 @@ public class ShopItemComponent extends VerticalLayout{
 		HorizontalLayout bottomLayout = new HorizontalLayout();
 		bottomLayout.setSpacing(true);
 		bottomLayout.setWidth(100, Unit.PERCENTAGE);
-		bottomLayout.setHeight(45,Unit.PIXELS);
+		bottomLayout.setHeight(40,Unit.PIXELS);
 
 		numberTf = new TextField();
 		numberTf.setWidth(60, Unit.PIXELS);

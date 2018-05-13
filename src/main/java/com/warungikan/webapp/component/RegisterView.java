@@ -73,14 +73,14 @@ public class RegisterView extends VerticalLayout implements View{
 		l.addComponent(pwd2F);
 		l.addComponent(map);
 
-		l.setExpandRatio(map, 1.0f);
-		l.setExpandRatio(cap, 0.0f);
-		l.setExpandRatio(emailF, 0.0f);
-		l.setExpandRatio(nameF, 0.0f);
-		l.setExpandRatio(telpF, 0.0f);
-		l.setExpandRatio(addressF, 0.0f);
-		l.setExpandRatio(pwdF, 0.0f);
-		l.setExpandRatio(pwd2F, 0.0f);
+//		l.setExpandRatio(map, 1.0f);
+//		l.setExpandRatio(cap, 0.0f);
+//		l.setExpandRatio(emailF, 0.0f);
+//		l.setExpandRatio(nameF, 0.0f);
+//		l.setExpandRatio(telpF, 0.0f);
+//		l.setExpandRatio(addressF, 0.0f);
+//		l.setExpandRatio(pwdF, 0.0f);
+//		l.setExpandRatio(pwd2F, 0.0f);
 
 		HorizontalLayout bl = new HorizontalLayout();
 		bl.setWidth(100, Unit.PERCENTAGE);

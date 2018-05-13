@@ -40,12 +40,12 @@ public class ShopView extends VerticalLayout implements View{
 		setWidth(100, Unit.PERCENTAGE);
 		setMargin(new MarginInfo(false, true, false, true));
 		setSpacing(true);
+		jwt = ((MyUI)UI.getCurrent()).getJwt();
+		items = ServiceInitator.getShopItemService().getAllShopItem(jwt);
 		
 		GridLayout content = itemContent(); 
 		addComponent(content);
 		setComponentAlignment(content, Alignment.BOTTOM_CENTER);
-		jwt = ((MyUI)UI.getCurrent()).getJwt();
-		items = ServiceInitator.getShopItemService().getAllShopItem(jwt);
 	}
 
 	private GridLayout itemContent() {

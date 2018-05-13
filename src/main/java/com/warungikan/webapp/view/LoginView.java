@@ -237,7 +237,7 @@ public class LoginView extends VerticalLayout implements View{
 		cartItem.setWidth(null);
 		cartItem.addStyleName("cincrement-label");
 		buttonContainer.addComponent(shoppingCart);
-		buttonContainer.addComponent(cartItem);
+//		buttonContainer.addComponent(cartItem);
 		
 		header.addComponent(buttonContainer);
 		header.addComponent(menuBar);

@@ -121,7 +121,7 @@ public class ShoppingCartView extends VerticalLayout implements View{
 			ShopItemCart i = items.get(j);
 			addProductItemToGrid(grid, i);
 			addLabelItemToGrid(grid,  String.valueOf(i.getCount()));
-			addLabelItemToGrid(grid, String.valueOf(i.getFish().getPrice()));
+			addLabelItemToGrid(grid, "Rp. "+Util.formatLocalAmount(i.getFish().getPrice()));
 			String price = String.valueOf(i.getFish().getPrice()).replace("Rp", "").replace(".", "").replace(" ", "");
 			
 			addLabelItemToGrid(grid, "Rp. "+Util.formatLocalAmount(Long.parseLong(price) * i.getCount()));

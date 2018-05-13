@@ -1,5 +1,6 @@
 package com.warungikan.webapp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.client.ResourceAccessException;
@@ -33,13 +34,12 @@ public class ShopItemService implements IShopItemService{
 		} catch (WarungIkanNetworkException e) {
 			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
-	public Boolean createShopItem(String jwt, String name, String description, String url, String price) {
-		VShopItem s = new VShopItem(name, description, url, price);
-		
+	public Boolean createShopItem(String jwt, String name, String description, String url, String price, String weight) {
+		VShopItem s = new VShopItem(name, description, url, price, weight);
 		try {
 			Boolean isCreated = shopItemManager.createShopItem(jwt, s);
 			return isCreated;
@@ -53,8 +53,8 @@ public class ShopItemService implements IShopItemService{
 	}
 
 	@Override
-	public Boolean updateShopItem(String jwt,String id, String name, String description, String url, String price) {
-		VShopItem s = new VShopItem(id, name, description, url, price);
+	public Boolean updateShopItem(String jwt,String id, String name, String description, String url, String price, String weight) {
+		VShopItem s = new VShopItem(id, name, description, url, price, weight);
 		try {
 			Boolean result = shopItemManager.updateShopItem(jwt, s);
 			return result;

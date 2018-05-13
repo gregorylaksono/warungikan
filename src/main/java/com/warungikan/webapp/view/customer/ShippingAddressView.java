@@ -46,8 +46,8 @@ public class ShippingAddressView extends VerticalLayout implements View{
 	private User user;
 
 	public ShippingAddressView() {
-		this.user = ServiceInitator.getUserService().getUser(jwt);
 		this.jwt = ((MyUI)UI.getCurrent()).getJwt();
+		this.user = ServiceInitator.getUserService().getUser(jwt);
 		this.items = ((MyUI) UI.getCurrent()).getItemsCart();
 		setHeight(800, Unit.PIXELS);
 		//		addressMap = createGoogleMap();

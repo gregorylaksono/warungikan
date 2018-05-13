@@ -34,6 +34,7 @@ public class ShopItemView extends VerticalLayout implements View, IParentWindowS
 	private static final String PRICE = "price";
 	private static final String URL = "url";
 	private static final String NAME = "name";
+	private static final String WEIGHT = "weight";
 	private String jwt;
 	private List<ShopItem> items;
 	private Table t;
@@ -59,6 +60,7 @@ public class ShopItemView extends VerticalLayout implements View, IParentWindowS
 			item.getItemProperty(NAME).setValue(i.getName());
 			item.getItemProperty(URL).setValue(i.getUrl());
 			item.getItemProperty(PRICE).setValue("Rp. "+Util.formatLocalAmount(i.getPrice()));
+			item.getItemProperty(WEIGHT).setValue(i.getWeight()+" gr");
 			item.getItemProperty(DESCRIPTION).setValue(i.getDescription());
 		}
 	}
@@ -99,6 +101,7 @@ public class ShopItemView extends VerticalLayout implements View, IParentWindowS
 							l.replaceComponent(pb3, t);
 							l.setComponentAlignment(t, Alignment.MIDDLE_LEFT);
 							l.setComponentAlignment(createNewItemBtn, Alignment.MIDDLE_LEFT);
+							createNewItemBtn.setEnabled(true);
 						}
 					});
 				} catch (InterruptedException e) {
@@ -106,7 +109,7 @@ public class ShopItemView extends VerticalLayout implements View, IParentWindowS
 				}
 			}
 		};
-		
+		createNewItemBtn.setEnabled(false);
 		l.addComponent(pb3);
 		l.addComponent(createNewItemBtn);
 		
@@ -126,6 +129,7 @@ public class ShopItemView extends VerticalLayout implements View, IParentWindowS
 		t.addContainerProperty(NAME, String.class, null, "Name", null, Align.LEFT);
 		t.addContainerProperty(URL , String.class, null, "URL", null, Align.LEFT);
 		t.addContainerProperty(PRICE , String.class, null, "Price", null, Align.LEFT);
+		t.addContainerProperty(WEIGHT , String.class, null, "Weight", null, Align.LEFT);
 		t.addContainerProperty(DESCRIPTION , String.class, null, "Description", null, Align.LEFT);
 
 		return t;
