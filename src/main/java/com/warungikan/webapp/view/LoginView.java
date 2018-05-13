@@ -197,6 +197,7 @@ public class LoginView extends VerticalLayout implements View{
 		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
 		n.addView(Constant.ADMIN_TRX_STATS, AgentTransactionStatusView.class);
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
+		n.addView(Constant.VIEW_ITEM_STOCK, MyProfileView.class);
 		n.navigateTo(Constant.ADMIN_TRX_STATS);
 	}
 
