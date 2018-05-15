@@ -102,7 +102,7 @@ public class MyProfileView extends VerticalLayout implements View{
 	};
 	public MyProfileView() {
 		sessionId = ((MyUI)UI.getCurrent()).getJwt();
-		Long balance = null;
+		Long balance = new Long(0);
 		if(((MyUI)UI.getCurrent()).getRole().equals("AGENT")){
 			isAgent = true;
 			balance = ServiceInitator.getTransactionService().getBalanceAgent(sessionId);

@@ -30,6 +30,7 @@ import com.warungikan.webapp.model.AgentProduct;
 import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
+import com.warungikan.webapp.util.Util;
 import com.warungikan.webapp.window.ConfirmDialog;
 
 public class ConfirmationPageView extends VerticalLayout implements View {
@@ -193,7 +194,7 @@ public class ConfirmationPageView extends VerticalLayout implements View {
 			totalAll = totalAll + total;
 			Label amount = Factory.createLabel(String.valueOf(number));
 			Label fishName = Factory.createLabel(i.getFish().getName());
-			Label totalPrice = Factory.createLabel("Rp. "+String.valueOf(total));
+			Label totalPrice = Factory.createLabel("Rp. "+Util.formatLocalAmount(total));
 
 			amount.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
 			fishName.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
@@ -203,17 +204,21 @@ public class ConfirmationPageView extends VerticalLayout implements View {
 			l.addComponent(amount);
 			l.addComponent(totalPrice);
 		}
-		
-		Label distance = Factory.createLabel(String.valueOf(this.agent.getDistance()));
+		Double d = new Double(this.agent.getDistance()) / 1000;
+		Label distance = Factory.createLabel(String.valueOf(Math.ceil(d))+" km");
 		Label priceName = Factory.createLabel("Biaya transport");
-		Label transportPrice = Factory.createLabel("Rp. "+String.valueOf(this.transportPrice));
+		Label transportPrice = Factory.createLabel("Rp. "+Util.formatLocalAmount(this.transportPrice));
+		
+		distance.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
+		priceName.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
+		transportPrice.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
 		
 		l.addComponent(priceName);
 		l.addComponent(distance);
 		l.addComponent(transportPrice);
 		
 		totalAll = totalAll + this.transportPrice;
-		Label bottTotal = Factory.createLabelHeader("Rp. "+String.valueOf(totalAll));
+		Label bottTotal = Factory.createLabelHeader("Rp. "+Util.formatLocalAmount(totalAll));
 		bottTotal.setWidth(100, Unit.PERCENTAGE);
 		l.addComponent(new Label());
 		l.addComponent(new Label());

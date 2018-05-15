@@ -41,11 +41,15 @@ public class AgentProductComponent extends VerticalLayout{
 		addStyleName("fitem-component");
 		setWidth(189, Unit.PIXELS);
 		setSpacing(true);
+		Double distance = new Double(agentProduct.getDistance()) / 1000;
+		Double distanceAbs = Math.ceil(distance);
+		
 		Label nameL = Factory.createLabel("Nama: "+agentProduct.getUser().getName());
 		Label addressL = Factory.createLabel("Alamat: "+agentProduct.getUser().getAddress());
-		Label distanceL = Factory.createLabel("Jarak "+agentProduct.getDistance());;
+		Label distanceL = Factory.createLabel("Jarak "+distanceAbs+" km");;
 		Button choose = Factory.createButtonOk("Pilih");
 		choose.addClickListener(e->{
+			((MyUI)UI.getCurrent()).setAgentProduct(agentProduct);
 			UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_CONFIRM_PAGE);
 		});
 		

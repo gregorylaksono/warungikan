@@ -58,20 +58,20 @@ public class ShippingAddressView extends VerticalLayout implements View{
 			AgentProduct p = new AgentProduct( Long.parseLong(a.getTotal_distance()), a.getTransport_price_per_km(), a.getUser());
 			agents.add(p);
 		}
-	
-		
+
+
 		ProgressBar pb3 = new ProgressBar();
-        pb3.setIndeterminate(true);
-        pb3.setCaption("Mencari agent terdekat...");
-        pb3.addStyleName("pb-center-align");
+		pb3.setIndeterminate(true);
+		pb3.setCaption("Mencari agent terdekat...");
+		pb3.addStyleName("pb-center-align");
 		Runnable l = new Runnable() {
-			
+
 			@Override
 			public void run() {
 				try {
 					Thread.sleep(3000);
 					UI.getCurrent().access(new Runnable() {
-						
+
 						@Override
 						public void run() {
 							agentsLayout = createAgentsLayout(agents);
@@ -83,10 +83,10 @@ public class ShippingAddressView extends VerticalLayout implements View{
 				}
 			}
 		};
-		
+
 		HorizontalLayout myData = createMyData();
-		
-		
+
+
 		addComponent(myData);
 		addComponent(pb3);
 
@@ -118,7 +118,7 @@ public class ShippingAddressView extends VerticalLayout implements View{
 		layout.setSpacing(true);
 		GridLayout grid = createItemsGrid();
 		layout.addComponent(grid);
-		
+
 		VerticalLayout addressLayout = new VerticalLayout();
 		addressLayout.setMargin(true);
 		addressLayout.addStyleName("product-container");
@@ -132,13 +132,13 @@ public class ShippingAddressView extends VerticalLayout implements View{
 		changeButton.addClickListener(e ->{
 			UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_PROFILE);
 		});
-		
+
 		addressLayout.addComponent(nameL);
 		addressLayout.addComponent(fullAddressL);
 		addressLayout.addComponent(telpNo);
 		addressLayout.addComponent(changeButton);
 		addressLayout.setComponentAlignment(changeButton, Alignment.BOTTOM_LEFT);
-		
+
 		layout.addComponent(addressLayout);
 		layout.setComponentAlignment(grid, Alignment.TOP_LEFT);
 		layout.setComponentAlignment(addressLayout, Alignment.TOP_RIGHT);
@@ -158,32 +158,15 @@ public class ShippingAddressView extends VerticalLayout implements View{
 			AgentProductComponent comp = new AgentProductComponent(a);
 			g.addComponent(comp);
 		}
-		
+
 		return g;
 	}
 
 	public static void main(String[] args) {
-		List<AgentProduct> agents = new ArrayList();
-		agents.add(new AgentProduct(new Long("200"), "3000", null));
-		agents.add(new AgentProduct(new Long("1500"), "3100", null));
-		agents.add(new AgentProduct(new Long("30000"), "3300", null));
-		agents.add(new AgentProduct(new Long("40000"), "5000", null));
-		agents.add(new AgentProduct(new Long("10610"), "5000", null));
-		agents.add(new AgentProduct(new Long("6100"), "5000", null));
-		agents.add(new AgentProduct(new Long("4500"), "5000", null));
-		agents.add(new AgentProduct(new Long("911"), "5000", null));
-		agents.add(new AgentProduct(new Long("7611"), "1000", null));
-		agents.add(new AgentProduct(new Long("9011"), "1000", null));
-		agents.add(new AgentProduct(new Long("18221"), "1000", null));
-		agents.add(new AgentProduct(new Long("9221"), "1000", null));
-		agents.add(new AgentProduct(new Long("40321"), "1000", null));
-		agents.add(new AgentProduct(new Long("8821"), "2500", null));
-		agents.add(new AgentProduct(new Long("100"), "2700", null));
-		agents.add(new AgentProduct(new Long("501"), "2300", null));
-		
-		agents = agents.stream().sorted((o1,o2)-> o1.getDistance().compareTo(o2.getDistance())  ).collect(Collectors.toList());
-		
-		
+		Double a = 0.134435345;
+		System.out.println(Math.ceil(a));
+
+
 	}
 
 	private GridLayout createItemsGrid() {
