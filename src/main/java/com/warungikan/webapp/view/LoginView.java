@@ -14,6 +14,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
@@ -44,6 +45,7 @@ import com.warungikan.webapp.view.admin.AdminTransactionView;
 import com.warungikan.webapp.view.admin.AdminUserManagementView;
 import com.warungikan.webapp.view.admin.ShopItemView;
 import com.warungikan.webapp.view.admin.WalletTransactionView;
+import com.warungikan.webapp.view.agent.AgentStockView;
 import com.warungikan.webapp.view.agent.AgentTransactionStatusView;
 import com.warungikan.webapp.view.customer.ConfirmationPageView;
 import com.warungikan.webapp.view.customer.MyProfileView;
@@ -142,9 +144,12 @@ public class LoginView extends VerticalLayout implements View{
 			public void buttonClick(ClickEvent event) {
 				usernameTf.validate();
 				passwordTf.validate();
-				String text = usernameTf.getValue();
+//				String text = "greg@test.com";
+//				String password = "gregory1234";
+				
+				String username = usernameTf.getValue();
 				String password = passwordTf.getValue();
-				String jwt = ServiceInitator.getUserService().login(text, password);
+				String jwt = ServiceInitator.getUserService().login(username, password);
 				
 				if(jwt == null) return;
 				parseJwt(jwt);
@@ -197,7 +202,7 @@ public class LoginView extends VerticalLayout implements View{
 		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
 		n.addView(Constant.ADMIN_TRX_STATS, AgentTransactionStatusView.class);
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
-		n.addView(Constant.VIEW_ITEM_STOCK, MyProfileView.class);
+		n.addView(Constant.VIEW_ITEM_STOCK, AgentStockView.class);
 		n.navigateTo(Constant.ADMIN_TRX_STATS);
 	}
 
@@ -223,6 +228,10 @@ public class LoginView extends VerticalLayout implements View{
 		header.setHeight(70, Unit.PIXELS);
 		header.setSpacing(true);
 		MenuBar menuBar = getMenuButton(role);
+		Image logo = new Image();
+		logo.setHeight(90, Unit.PIXELS);
+		
+		logo.setSource(new ThemeResource("images/warungikanlogo.png"));
 		
 		CssLayout buttonContainer = new CssLayout();
 		Button shoppingCart = new Button("");
@@ -234,14 +243,19 @@ public class LoginView extends VerticalLayout implements View{
 		shoppingCart.addStyleName("cart-custom");
 		shoppingCart.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
 //		shoppingCart.setIcon(VaadinIcons.CART_O);
-		Label cartItem = new Label("2");
-		cartItem.setWidth(null);
-		cartItem.addStyleName("cincrement-label");
-		buttonContainer.addComponent(shoppingCart);
+//		Label cartItem = new Label("2");
+//		cartItem.setWidth(null);
+//		cartItem.addStyleName("cincrement-label");
+		if(!role.equals("ADMIN") && !role.equals("AGENT")) {
+			buttonContainer.addComponent(shoppingCart);
+		}
+		
 //		buttonContainer.addComponent(cartItem);
 		
+		header.addComponent(logo);
 		header.addComponent(buttonContainer);
 		header.addComponent(menuBar);
+		header.setComponentAlignment(logo, Alignment.MIDDLE_LEFT);
 		header.setComponentAlignment(buttonContainer, Alignment.MIDDLE_RIGHT);
 		header.setComponentAlignment( menuBar, Alignment.MIDDLE_RIGHT);
 		header.setExpandRatio(buttonContainer, 1.0f);
@@ -322,6 +336,9 @@ public class LoginView extends VerticalLayout implements View{
         
         dropdown.addItem("Transaction", e ->{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_TRANSACTION);
+        });
+        dropdown.addItem("Stok item", e ->{
+        	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_ITEM_STOCK);
         });
         dropdown.addSeparator();
         dropdown.addItem("Logout", logout);

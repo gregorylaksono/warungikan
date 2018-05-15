@@ -3,6 +3,8 @@ package com.warungikan.webapp.dialog;
 import java.util.Date;
 import java.util.List;
 
+import org.warungikan.db.model.ShopItem;
+import org.warungikan.db.model.ShopItemStock;
 import org.warungikan.db.model.TopupWalletHistory;
 import org.warungikan.db.model.User;
 
@@ -18,6 +20,8 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
@@ -31,12 +35,12 @@ public class StockItem extends VerticalLayout{
 	 * 
 	 */
 	private static final long serialVersionUID = -5263086168594525385L;
-	private TopupWalletHistory t;
+	private ShopItemStock t;
 	private String jwt;
-	private ComboBox comboboxUser;
+	private ComboBox comboboxItem;
 	private IParentWindowService parent;
 	
-	public StockItem(TopupWalletHistory t, IParentWindowService parent) {
+	public StockItem(ShopItemStock t, IParentWindowService parent) {
 		this.jwt = ((MyUI)UI.getCurrent()).getJwt();
 		this.t = t;
 		this.parent = parent;
@@ -50,10 +54,15 @@ public class StockItem extends VerticalLayout{
 	}
 
 	private void initData() {
-		List<User> users = ServiceInitator.getUserService().getAllUsers(jwt);
-		for(User u: users){
-			comboboxUser.addItem(u.getEmail());
-			comboboxUser.setItemCaption(u.getEmail(), u.getName());
+		List<ShopItem> items = ServiceInitator.getShopItemService().getAllShopItem(jwt);
+		for(ShopItem u: items){
+			comboboxItem.addItem(u.getId());
+			comboboxItem.setItemCaption(u.getId(), u.getName());
+		}
+		
+		if(t!=null) {
+			comboboxItem.select(t.getItem().getId());
+			comboboxItem.setReadOnly(true);
 		}
 		
 	}
@@ -61,55 +70,49 @@ public class StockItem extends VerticalLayout{
 	private FormLayout createForm() {
 		FormLayout f = new FormLayout();
 		
-		comboboxUser = new ComboBox("User");
+		comboboxItem = new ComboBox("Item");
 		TextField amountField = new TextField("Amount");
-		TextField refNoBankField = new TextField("Ref. bank no");
-		DateField creditDateField = new DateField("Uang masuk");
-		creditDateField.setWidth(185, Unit.PIXELS);
-		comboboxUser.setNullSelectionAllowed(false);
+
+		comboboxItem.setNullSelectionAllowed(false);
 		
-		comboboxUser.setRequired(true);
+		comboboxItem.setRequired(true);
 		amountField.setRequired(true);
-		creditDateField.setRequired(true);
-		refNoBankField.setRequired(true);
 		
-		comboboxUser.setImmediate(true);
+		comboboxItem.setImmediate(true);
 		amountField.setImmediate(true);
-		creditDateField.setImmediate(true);
 		
 		amountField.addValidator(new RegexpValidator(Constant.VALIDATOR_REGEX_AMOUNT, "Amount muss be numeric"));
-		refNoBankField.addValidator(new StringLengthValidator("Reference bank no harus diisi", 5, 30, false));
-		creditDateField.setResolution(Resolution.MINUTE);
-		creditDateField.setDateFormat("dd-MM-yyyy HH:mm");
 		
 		Button submit = new Button("Submit");
 		submit.addStyleName(ValoTheme.BUTTON_TINY);
 		submit.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		
-		f.addComponent(comboboxUser);
+		f.addComponent(comboboxItem);
 		f.addComponent(amountField);
-		f.addComponent(creditDateField);
 		f.addComponent(submit);
 		
-		submit.addClickListener( e->{
-			try{
-				amountField.validate();
-				String user_id = (String) comboboxUser.getValue();
-				String amount = amountField.getValue();
-				Date creditOn = creditDateField.getValue();
-				String refNoBank = refNoBankField.getValue();
-				
-				Boolean result = ServiceInitator.getTransactionService().addBalanceUser(jwt, user_id, amount, Util.parseDate(creditOn), refNoBank);
-				if(result){
-					Notification.show("Topup berhasil dilakukan", Type.TRAY_NOTIFICATION);
-				}else{
-					Notification.show("Topup gagal dilakukan", Type.ERROR_MESSAGE);
+		submit.addClickListener( new ClickListener() {
+				@Override
+				public void buttonClick(ClickEvent event) {
+					try{
+						amountField.validate();
+						String shopid = String.valueOf(comboboxItem.getValue());
+						String amount = amountField.getValue();
+						Boolean	result = ServiceInitator.getShopItemService().addStock(jwt, shopid, Integer.parseInt(amount));
+						if(result){
+							Notification.show("Update stock berhasil dilakukan", Type.TRAY_NOTIFICATION);
+							((MyUI)UI.getCurrent()).closeWindow();
+						}else{
+							Notification.show("Update stock gagal dilakukan", Type.ERROR_MESSAGE);
+						}
+						parent.update();
+					}catch(Exception ex){
+						Notification.show("Input tidak valid", Type.ERROR_MESSAGE);
+					}
+	
 				}
-				parent.update();
-			}catch(Exception ex){
-				Notification.show("Input tidak valid", Type.ERROR_MESSAGE);
-			}
-		});
+		
+			});
 		
 		return f;
 	}

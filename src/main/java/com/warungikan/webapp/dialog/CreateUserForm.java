@@ -8,6 +8,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
@@ -22,7 +23,7 @@ import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.model.RSAddName;
 import com.warungikan.webapp.util.Factory;
 
-public class CreateUserForm extends VerticalLayout {
+public class CreateUserForm extends HorizontalLayout {
 
 	/**
 	 * 
@@ -107,14 +108,20 @@ public class CreateUserForm extends VerticalLayout {
 		this.user = user;
 		setSpacing(true);
 		setMargin(true);
+		this.adminUserTab = adminUserTab;
+		VerticalLayout rightLayout = new VerticalLayout();
+		rightLayout.setSpacing(true);
+		createUser = Factory.createButtonOk("Save user");
+		
 		FormLayout f = createContent();
 		map = new MapPage("Tentukan letak alamat", true);
+		
 		addComponent(f);
-		addComponent(map);
-		setSpacing(true);
-		this.adminUserTab = adminUserTab;
-		createUser = Factory.createButtonOk("Save user");
-		addComponent(createUser);
+
+		rightLayout.addComponent(map);
+		rightLayout.addComponent(createUser);
+		
+		addComponent(rightLayout);
 		createUser.addClickListener(createUserListener);
 		initModeWindow();
 	}
