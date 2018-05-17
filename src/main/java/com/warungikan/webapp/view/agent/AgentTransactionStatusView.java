@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.warungikan.db.model.Transaction;
+import org.warungikan.db.model.TransactionState;
 
 import com.vaadin.data.Item;
 import com.vaadin.navigator.View;
@@ -14,6 +15,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.component.service.IParentWindowService;
@@ -39,16 +41,17 @@ public class AgentTransactionStatusView extends VerticalLayout implements View, 
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		this.jwt = ((MyUI)UI.getCurrent()).getJwt();
 		setSpacing(true);
 		setMargin(true);
 	}
 
 	public AgentTransactionStatusView() {
+		this.jwt = ((MyUI)UI.getCurrent()).getJwt();
 		t = createTabel();
 		addStyleName("product-container");
 		addComponent(t);
 		setComponentAlignment(t, Alignment.MIDDLE_CENTER);
+		update();
 	}
 
 
@@ -64,13 +67,13 @@ public class AgentTransactionStatusView extends VerticalLayout implements View, 
 		t.addContainerProperty(AMOUNT, String.class,null);
 		t.addContainerProperty(TRANSPORT_PRICE, String.class,null);
 		t.addContainerProperty(DETAILS, Button.class,null);
-		t.addContainerProperty(STATUS, Label.class,null);
+		t.addContainerProperty(STATUS, String.class,null);
 		
 		t.setColumnHeader(TRANSPORT_PRICE, "Biaya transport");
 		t.setColumnHeader(TRANSACTION_ID, "ID Transaksi");
 		t.setColumnHeader(TRANSACTION_ON, "Tanggal");
 		t.setColumnHeader(CUSTOMER, "Customer");
-		t.setColumnHeader(AMOUNT, "Jumlah");
+		t.setColumnHeader(AMOUNT, "Total");
 		t.setColumnHeader(DETAILS, "Pesanan");
 		t.setColumnHeader(STATUS, "Status");
 		
@@ -88,10 +91,17 @@ public class AgentTransactionStatusView extends VerticalLayout implements View, 
 		t.removeAllItems();
 		List<Transaction> trxs = ServiceInitator.getTransactionService().getTransactionAgent(jwt);
 		for(Transaction trx: trxs) {
-			Button detailsButton = new Button("Lihat alamat");
+			Button detailsButton = new Button("Detail");
 			detailsButton.addStyleName(ValoTheme.BUTTON_TINY);
 			detailsButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-			
+			detailsButton.addClickListener(e->{
+				Window w = new Window();
+				w.setContent(new TransactionDetailMap(trx.getCustomer(), TransactionState.TransactionStateEnum.));
+				w.setModal(true);
+				w.setDraggable(false);
+				w.setClosable(true);
+				UI.getCurrent().addWindow(w);
+			});
 			Item i = t.addItem(trx.getTransactionId());
 			i.getItemProperty(TRANSACTION_ID).setValue(trx.getTransactionId());
 			i.getItemProperty(TRANSACTION_ON).setValue(trx.getCreationDate());
