@@ -61,7 +61,7 @@ public class AgentProductComponent extends VerticalLayout{
 		addComponent(telpNo);
 		addComponent(choose);
 		setComponentAlignment(choose, Alignment.BOTTOM_RIGHT);
-		choose.addClickListener(chooseListener );
+//		choose.addClickListener(chooseListener );
 	}
 
 	private Window createDialogConfirmation() {

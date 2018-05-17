@@ -22,6 +22,7 @@ import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
+import com.warungikan.webapp.util.Util;
 
 public class MyTransaction extends VerticalLayout implements View {
 
@@ -36,9 +37,10 @@ public class MyTransaction extends VerticalLayout implements View {
 	private static final String AGENT_NAME = "agent_name";
 	private static final String ORDER_ON = "order_on";
 	private static final String TRANASCTION_ID = "trx_id";
-	private Long balance;
+	private Long balance = new Long(0);
 	private String jwt;
 	protected List<Transaction> transactions;
+	private Label header;
 	public static DecimalFormat decimalFormat = new DecimalFormat("###,###");
 	public MyTransaction() {
 		this.jwt = ((MyUI)UI.getCurrent()).getJwt();
@@ -57,16 +59,16 @@ public class MyTransaction extends VerticalLayout implements View {
 		
 		Runnable l = new Runnable() {
 			
-			
-
 			@Override
 			public void run() {
 				balance = ServiceInitator.getTransactionService().getBalanceCustomer(jwt);
 				transactions = ServiceInitator.getTransactionService().getTransactionCustomer(jwt);
+				header.setValue("Saldo sekarang : Rp. "+decimalFormat.format(balance));
 				UI.getCurrent().access(new Runnable() {
 					
 					@Override
 					public void run() {
+						
 						Table t = createTable();
 						parent.replaceComponent(pb3, t);
 					}
@@ -108,13 +110,14 @@ public class MyTransaction extends VerticalLayout implements View {
 	}
 	
 	private VerticalLayout createWalletLayout() {
+		
 		VerticalLayout layout = new VerticalLayout();
 		layout.setWidth(85, Unit.PERCENTAGE);
 		layout.setMargin(true);
 		layout.setSpacing(true);
 		
 		layout.addStyleName("product-container");
-		Label header = Factory.createLabelHeaderNormal("Saldo sekarang : Rp. "+decimalFormat.format(balance));
+		header = new Label();
 		Button topupButton = Factory.createButtonOk("Top up saldo");
 		
 		layout.addComponent(header);
@@ -135,22 +138,18 @@ public class MyTransaction extends VerticalLayout implements View {
 		t.addContainerProperty(TOTAL_PRICE, String.class, null);
 		t.addContainerProperty(PROGRESS, Button.class, null);
 		t.addContainerProperty(VIEW_DETAIL, Button.class, null);
-//		t.addContainerProperty(CANCEL, Button.class, null);
 		
 		t.setColumnHeader(TRANASCTION_ID, "No pemesanan");
 		t.setColumnHeader(ORDER_ON, "Tanggal");
 		t.setColumnHeader(AGENT_NAME, "Agen");
 		t.setColumnHeader(TOTAL_PRICE, "Harga");
 		t.setColumnHeader(PROGRESS, "Lihat progress");
-		t.setColumnHeader(VIEW_DETAIL, "");
-//		t.setColumnHeader(CANCEL, "");
+		t.setColumnHeader(VIEW_DETAIL, "Detail");
 		
 		t.setColumnWidth(ORDER_ON, 130);
 		t.setColumnWidth(AGENT_NAME, 130);
 		t.setColumnWidth(TOTAL_PRICE, 130);
 		t.setColumnWidth(PROGRESS, 130);
-//		t.setColumnWidth(CANCEL, 130);
-//		t.setColumnWidth(CANCEL, 130);
 		
 //		t.setColumnWidth(CANCEL, 130);
 		t.setColumnWidth(VIEW_DETAIL, 130);
@@ -161,11 +160,11 @@ public class MyTransaction extends VerticalLayout implements View {
 		for(Transaction trx : transactions){
 			Item i = t.addItem(trx.getOid());
 			Button progressButton = Factory.createButtonNormal("Progress");
-			Button viewDetailButton = Factory.createButtonNormal("Progress");
-			i.getItemProperty(TRANASCTION_ID).setValue(trx.getOid());
-			i.getItemProperty(ORDER_ON).setValue(trx.getCreationDate());
+			Button viewDetailButton = Factory.createButtonOk("Detail");
+			i.getItemProperty(TRANASCTION_ID).setValue(trx.getTransactionId());
+			i.getItemProperty(ORDER_ON).setValue(Util.parseDate(trx.getCreationDate()));
 			i.getItemProperty(AGENT_NAME).setValue(trx.getAgent().getName());
-			i.getItemProperty(TOTAL_PRICE).setValue(trx.getTotalPrice());
+			i.getItemProperty(TOTAL_PRICE).setValue("Rp. "+Util.formatLocalAmount(trx.getTotalPrice()));
 			i.getItemProperty(PROGRESS).setValue(progressButton);
 			i.getItemProperty(VIEW_DETAIL).setValue(viewDetailButton);
 		}

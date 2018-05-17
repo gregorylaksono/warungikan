@@ -104,11 +104,7 @@ public class ConfirmationPageView extends VerticalLayout implements View {
 		};
 
 
-		cont.addClickListener(e ->{			
-			ConfirmPayment t = new ConfirmPayment(c, null);
-			ConfirmDialog d = new ConfirmDialog(t);
-			d.show();
-		});
+		cont.addClickListener(c);
 
 
 		l.addComponent(cancel);

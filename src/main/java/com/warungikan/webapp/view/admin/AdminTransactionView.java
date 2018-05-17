@@ -61,9 +61,9 @@ public class AdminTransactionView extends HorizontalLayout implements View{
 						
 						@Override
 						public void run() {
-							trxTable = createTrxTable();
+							Table detailTable = createStateTable();
 							initTransactionTable();
-							replaceComponent(pb3, trxTable);
+							replaceComponent(pb3, detailTable);
 							
 						}
 					});
@@ -73,14 +73,12 @@ public class AdminTransactionView extends HorizontalLayout implements View{
 			}
 		};
 		
-		
-		Table detailTable = createDetailTable();
-
-		addComponent(detailTable);
+		trxTable = createTrxTable();
+		addComponent(trxTable);
 		addComponent(pb3);
 
 		setExpandRatio(pb3, 0.3f);
-		setExpandRatio(detailTable, 0.7f);
+		setExpandRatio(trxTable, 0.7f);
 		this.jwt = ((MyUI)UI.getCurrent()).getJwt();
 		Thread as = new Thread(l);
 		as.start();
@@ -108,21 +106,21 @@ public class AdminTransactionView extends HorizontalLayout implements View{
 	}
 
 
-	private Table createDetailTable() {
+	private Table createTrxTable() {
 		Table t = new Table();
 		t.setSizeFull();
-		t.addContainerProperty(TRX_ID , String.class, null, "Transaction id", null, Align.LEFT);
-		t.addContainerProperty(CUSTOMER , String.class, null, "Customer", null, Align.LEFT);
-		t.addContainerProperty(TRX_DATE, String.class, null, "Transaction on", null, Align.LEFT);
-		t.addContainerProperty(AGENT , String.class, null, "Agent", null, Align.LEFT);
-		t.addContainerProperty(TOTAL_PRICE , String.class, null, "Total price", null, Align.LEFT);
+		t.addContainerProperty(TRX_ID , 		 String.class, null, "Transaction id", null, Align.LEFT);
+		t.addContainerProperty(CUSTOMER , 		 String.class, null, "Customer", null, Align.LEFT);
+		t.addContainerProperty(TRX_DATE, 		 String.class, null, "Transaction on", null, Align.LEFT);
+		t.addContainerProperty(AGENT , 			 String.class, null, "Agent", null, Align.LEFT);
+		t.addContainerProperty(TOTAL_PRICE , 	 String.class, null, "Total price", null, Align.LEFT);
 		t.addContainerProperty(SETTLEMENT_DATE , String.class, null, "Settlement date", null, Align.LEFT);
-		t.addContainerProperty(VIEW_ITEM , Button.class, null, "Item", null, Align.LEFT);
+		t.addContainerProperty(VIEW_ITEM , 		 Button.class, null, "Item", null, Align.LEFT);
 		return t;
 	}
 
 
-	private Table createTrxTable() {
+	private Table createStateTable() {
 		Table t = new Table();
 		t.setSizeFull();
 		t.addContainerProperty(STATE_DATE , String.class, null, "Date", null, Align.LEFT);
