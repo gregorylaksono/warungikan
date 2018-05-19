@@ -149,7 +149,8 @@ public class ShippingAddressView extends VerticalLayout implements View{
 
 	private GridLayout createAgentsLayout(List<AgentProduct> agents) {
 		agents = agents.stream().sorted((o1, o2) -> o1.getDistance().compareTo(o2.getDistance())).collect(Collectors.toList());
-		GridLayout g = new GridLayout(4, 6);
+		GridLayout g = new GridLayout(3, 6);
+		g.setWidth(780, Unit.PIXELS);
 		g.setSpacing(true);
 		g.setMargin(true);
 		g.addStyleName("product-container");

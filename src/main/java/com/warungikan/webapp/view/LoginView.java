@@ -10,6 +10,7 @@ import org.warungikan.db.model.User;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Sizeable.Unit;
@@ -64,6 +65,9 @@ public class LoginView extends VerticalLayout implements View{
 	 * 
 	 */
 	private static final long serialVersionUID = 8076026182734554951L;
+	private List<String> navigatorContent = new ArrayList<>();
+	private String defaultNavigationView = null;
+	
 	Command logout = new Command() {
 		
 		@Override
@@ -71,6 +75,23 @@ public class LoginView extends VerticalLayout implements View{
 			ServiceInitator.getUserService().logout();
 		}
 	};
+
+	private ViewChangeListener navigatorViewChangeListener = new ViewChangeListener() {
+		
+		@Override
+		public boolean beforeViewChange(ViewChangeEvent event) {
+			if(!navigatorContent.contains(event.getViewName())){
+				((MyUI)UI.getCurrent()).getNavigator().navigateTo(defaultNavigationView);
+			}
+			return true;
+		}
+		
+		@Override
+		public void afterViewChange(ViewChangeEvent event) {
+			
+		}
+	};
+	
 	public LoginView() {
 		addStyleName("white-background");
 		setSizeFull();
@@ -186,12 +207,20 @@ public class LoginView extends VerticalLayout implements View{
 		((MyUI)UI.getCurrent()).setHeader(header);
 		
 		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
-		
+		n.addViewChangeListener(navigatorViewChangeListener );
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
 		n.addView(Constant.VIEW_USERS_ADMIN, AdminUserManagementView.class);
 		n.addView(Constant.VIEW_USERS_TRANSACTION, AdminTransactionView.class);
 		n.addView(Constant.VIEW_WALLET_TRANSACTION, WalletTransactionView.class);
 		n.addView(Constant.VIEW_SHOP_ITEM, ShopItemView.class);
+		
+		navigatorContent.add(Constant.VIEW_MY_PROFILE);
+		navigatorContent.add(Constant.VIEW_USERS_ADMIN);
+		navigatorContent.add(Constant.VIEW_USERS_TRANSACTION);
+		navigatorContent.add(Constant.VIEW_WALLET_TRANSACTION);
+		navigatorContent.add(Constant.VIEW_SHOP_ITEM);
+		
+		defaultNavigationView = Constant.VIEW_USERS_ADMIN;
 		n.navigateTo(Constant.VIEW_USERS_ADMIN);		
 	}
 	
@@ -200,10 +229,19 @@ public class LoginView extends VerticalLayout implements View{
 		((MyUI)UI.getCurrent()).setHeader(header);
 		
 		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
-		n.addView(Constant.ADMIN_TRX_STATS, AgentTransactionStatusView.class);
+		n.addViewChangeListener(navigatorViewChangeListener );
+
+		n.addView(Constant.AGENT_TRX_STATS, AgentTransactionStatusView.class);
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
 		n.addView(Constant.VIEW_ITEM_STOCK, AgentStockView.class);
-		n.navigateTo(Constant.ADMIN_TRX_STATS);
+		
+		navigatorContent.add(Constant.AGENT_TRX_STATS);
+		navigatorContent.add(Constant.VIEW_MY_PROFILE);
+		navigatorContent.add(Constant.VIEW_ITEM_STOCK);
+		
+		defaultNavigationView = Constant.AGENT_TRX_STATS;
+		
+		n.navigateTo(Constant.AGENT_TRX_STATS);
 	}
 
 
@@ -212,6 +250,8 @@ public class LoginView extends VerticalLayout implements View{
 		((MyUI)UI.getCurrent()).setHeader(header);
 		
 		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
+		n.addViewChangeListener(navigatorViewChangeListener );
+
 		n.addView(Constant.VIEW_SHOP, ShopView.class);
 		n.addView(Constant.VIEW_CART_DETAIL, ShoppingCartView.class);
 		n.addView(Constant.VIEW_AGENT_SHIPMENT, ShippingAddressView.class);
@@ -219,6 +259,17 @@ public class LoginView extends VerticalLayout implements View{
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
 		n.addView(Constant.VIEW_CONFIRM_PAGE, ConfirmationPageView.class);
 		n.addView(Constant.VIEW_MY_TRANSACTION, MyTransaction.class);
+		
+		navigatorContent.add(Constant.VIEW_SHOP);
+		navigatorContent.add(Constant.VIEW_CART_DETAIL);
+		navigatorContent.add(Constant.VIEW_AGENT_SHIPMENT);
+		navigatorContent.add(Constant.VIEW_SHOP);
+		navigatorContent.add(Constant.VIEW_MY_PROFILE);
+		navigatorContent.add(Constant.VIEW_CONFIRM_PAGE);
+		navigatorContent.add(Constant.VIEW_MY_TRANSACTION);
+		
+		defaultNavigationView = Constant.VIEW_SHOP;
+		
 		n.navigateTo(Constant.VIEW_SHOP);
 	}
 
@@ -335,7 +386,7 @@ public class LoginView extends VerticalLayout implements View{
         dropdown = split.addItem("", null);
         
         dropdown.addItem("Transaction", e ->{
-        	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_TRANSACTION);
+        	UI.getCurrent().getNavigator().navigateTo(Constant.AGENT_TRX_STATS);
         });
         dropdown.addItem("Stok item", e ->{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_ITEM_STOCK);

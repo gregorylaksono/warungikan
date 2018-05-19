@@ -9,7 +9,7 @@ public class Constant {
 	public static final String VIEW_MY_PROFILE = "my_profile";
 	public static final String VIEW_CONFIRM_PAGE = "confirm_page";
 	public static final String VIEW_MY_TRANSACTION = "my_transaction";
-	public static final String ADMIN_TRX_STATS = "adm_trx_stats";
+	public static final String AGENT_TRX_STATS = "agent_trx_stats";
 	public static final String VIEW_USERS_ADMIN = "users_management";
 	public static final String VIEW_USERS_TRANSACTION = "transactions";
 	public static final String VIEW_WALLET_TRANSACTION = "wallet_transaction";
@@ -58,10 +58,11 @@ public class Constant {
 	public static final String WS_POST_TRANSCTION_MARK_PROCESSING_URL = ApplicationProperties.getWsURL()+"transaction/mark_processing";
 	public static final String WS_POST_TRANSCTION_MARK_DELIVERING_URL = ApplicationProperties.getWsURL()+"transaction/mark_delivering";
 	public static final String WS_POST_TRANSCTION_MARK_RECEIVING_URL = ApplicationProperties.getWsURL()+"transaction/mark_receiving";
-	public static final String WS_POST_TRANSCTION_MARK_CANCEL_URL = ApplicationProperties.getWsURL()+"transaction/mark_receiving";
+	public static final String WS_POST_TRANSCTION_MARK_CANCEL_URL = ApplicationProperties.getWsURL()+"transaction/mark_cancel";
 	public static final String WS_GET_TRANSCTION_BALANCE_CUSTOMER_URL = ApplicationProperties.getWsURL()+"transaction/balance/customer";
 	public static final String WS_GET_TRANSCTION_BALANCE_AGENT_URL = ApplicationProperties.getWsURL()+"transaction/balance/agent";
 	public static final String WS_GET_TRANSACTION_CALC_TRANSPORT_URL = ApplicationProperties.getWsURL()+"transaction/transport_price";
+	public static final String WS_GET_TRX_DETAIL_URL = ApplicationProperties.getWsURL()+"transaction/detail";
 	public static final String WS_POST_TRANSCTION_IS_LEGIT_URL = ApplicationProperties.getWsURL()+"transaction/is_legit";
 	
 	public static final String WS_GET_GET_SHOP_ITEM_URL = ApplicationProperties.getWsURL()+"shop/item";
@@ -83,5 +84,7 @@ public class Constant {
 	public static final String HEADER_STRING = "Authorization";
 	public static final String IV = "AAAAAAAAAAAAFFFF";
 	public static final String ENC_KEY = "NhzeepOXvXgSTrOxMuNMT1zHO6PQj2Gc6JnRQgMD";
+	
+	
 	
 }

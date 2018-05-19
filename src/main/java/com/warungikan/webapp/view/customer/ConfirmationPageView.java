@@ -1,5 +1,6 @@
 package com.warungikan.webapp.view.customer;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -88,12 +89,15 @@ public class ConfirmationPageView extends VerticalLayout implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				AgentProduct p = ((MyUI)UI.getCurrent()).getAgentProduct();
-				Long transportPrice = p.getDistance() * Long.parseLong(p.getPricePerKM());
+				Double distance = new Double(p.getDistance()) / 1000;
+				Double distanceAbs = Math.ceil(distance);
+				Long transportPrice = new BigDecimal(distanceAbs).longValue() * Long.parseLong(p.getPricePerKM());
 				List<ShopItemCart> carts = ((MyUI)UI.getCurrent()).getItemsCart();
 				Set<TransactionDetail> details = convertObject(carts);
 				Transaction result = ServiceInitator.getTransactionService().addTransaction(jwt, p.getUser().getEmail(), transportPrice,p.getDistance(), details);
 				if(result != null){
 					UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_TRANSACTION);
+					((MyUI)UI.getCurrent()).clearShopingCart();
 					Notification.show("Transaksi berhasil", Type.TRAY_NOTIFICATION);
 				}else{
 					UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_SHOP);

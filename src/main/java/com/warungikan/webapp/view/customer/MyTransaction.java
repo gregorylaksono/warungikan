@@ -17,8 +17,11 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
+import com.warungikan.webapp.dialog.AgentDetailComponent;
+import com.warungikan.webapp.dialog.TransactionDetailComponent;
 import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.util.Constant;
 import com.warungikan.webapp.util.Factory;
@@ -136,14 +139,14 @@ public class MyTransaction extends VerticalLayout implements View {
 		t.addContainerProperty(ORDER_ON, String.class, null);
 		t.addContainerProperty(AGENT_NAME, String.class, null);
 		t.addContainerProperty(TOTAL_PRICE, String.class, null);
-		t.addContainerProperty(PROGRESS, Button.class, null);
+		t.addContainerProperty(PROGRESS, String.class, null);
 		t.addContainerProperty(VIEW_DETAIL, Button.class, null);
 		
 		t.setColumnHeader(TRANASCTION_ID, "No pemesanan");
 		t.setColumnHeader(ORDER_ON, "Tanggal");
 		t.setColumnHeader(AGENT_NAME, "Agen");
 		t.setColumnHeader(TOTAL_PRICE, "Harga");
-		t.setColumnHeader(PROGRESS, "Lihat progress");
+		t.setColumnHeader(PROGRESS, "Progress");
 		t.setColumnHeader(VIEW_DETAIL, "Detail");
 		
 		t.setColumnWidth(ORDER_ON, 130);
@@ -159,13 +162,21 @@ public class MyTransaction extends VerticalLayout implements View {
 		
 		for(Transaction trx : transactions){
 			Item i = t.addItem(trx.getOid());
-			Button progressButton = Factory.createButtonNormal("Progress");
 			Button viewDetailButton = Factory.createButtonOk("Detail");
+			viewDetailButton.addClickListener(e ->{
+				Window w = new Window();
+				w.setModal(true);
+				w.setResizable(false);
+				w.setClosable(true);
+				w.setContent(new TransactionDetailComponent(trx));
+				UI.getCurrent().addWindow(w);
+			});
+		
 			i.getItemProperty(TRANASCTION_ID).setValue(trx.getTransactionId());
 			i.getItemProperty(ORDER_ON).setValue(Util.parseDate(trx.getCreationDate()));
 			i.getItemProperty(AGENT_NAME).setValue(trx.getAgent().getName());
 			i.getItemProperty(TOTAL_PRICE).setValue("Rp. "+Util.formatLocalAmount(trx.getTotalPrice()));
-			i.getItemProperty(PROGRESS).setValue(progressButton);
+			i.getItemProperty(PROGRESS).setValue(trx.getStatus());
 			i.getItemProperty(VIEW_DETAIL).setValue(viewDetailButton);
 		}
 		return t;

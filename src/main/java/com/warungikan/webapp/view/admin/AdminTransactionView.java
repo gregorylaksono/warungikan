@@ -5,8 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.warungikan.db.model.Transaction;
+import org.warungikan.db.model.TransactionState;
+import org.warungikan.db.model.TransactionState.TransactionStateEnum;
 
 import com.vaadin.data.Item;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
@@ -17,10 +21,12 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Table.Align;
 import com.warungikan.webapp.MyUI;
+import com.warungikan.webapp.dialog.TransactionDetailComponent;
 import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.util.Factory;
 import com.warungikan.webapp.util.Util;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 public class AdminTransactionView extends HorizontalLayout implements View{
 	/**
@@ -40,6 +46,7 @@ public class AdminTransactionView extends HorizontalLayout implements View{
 	
 	private String jwt;
 	private Table trxTable;
+	private Table statesTable;
 	
 	public AdminTransactionView() {
 		addStyleName("product-container");
@@ -90,7 +97,14 @@ public class AdminTransactionView extends HorizontalLayout implements View{
 		List<Transaction> allTrx = ServiceInitator.getTransactionService().getAllTransaction(jwt);
 		for(Transaction t : allTrx){
 			Button viewDetailBtn = Factory.createButtonNormal("Lihat detail");
-			
+			viewDetailBtn.addClickListener(e ->{
+				Window w = new Window();
+				w.setModal(true);
+				w.setResizable(false);
+				w.setClosable(true);
+				w.setContent(new TransactionDetailComponent(t));
+				UI.getCurrent().addWindow(w);
+			});
 			Item i = trxTable.addItem(t.getTransactionId());
 			i.getItemProperty(TRX_ID).setValue(t.getTransactionId());
 			i.getItemProperty(CUSTOMER).setValue(t.getCustomer().getName());
@@ -116,17 +130,32 @@ public class AdminTransactionView extends HorizontalLayout implements View{
 		t.addContainerProperty(TOTAL_PRICE , 	 String.class, null, "Total price", null, Align.LEFT);
 		t.addContainerProperty(SETTLEMENT_DATE , String.class, null, "Settlement date", null, Align.LEFT);
 		t.addContainerProperty(VIEW_ITEM , 		 Button.class, null, "Item", null, Align.LEFT);
+		t.setSelectable(true);
+		t.addItemClickListener(new ItemClickListener() {
+			
+			@Override
+			public void itemClick(ItemClickEvent event) {
+				String trx_id = (String) event.getItemId();
+				List<TransactionState> states = ServiceInitator.getTransactionService().getTransactionState(jwt, trx_id);
+				statesTable.removeAllItems();
+				for(TransactionState s: states){
+					Item i = statesTable.addItem(s.getOid());
+					i.getItemProperty(STATE_DATE).setValue(Util.parseDate(s.getCreationDate()));
+					i.getItemProperty(STATE_NAME).setValue(TransactionStateEnum.getStateName(s.getState()));
+				}
+			}
+		});
 		return t;
 	}
 
 
 	private Table createStateTable() {
-		Table t = new Table();
-		t.setSizeFull();
-		t.addContainerProperty(STATE_DATE , String.class, null, "Date", null, Align.LEFT);
-		t.addContainerProperty(STATE_NAME , String.class, null, "State", null, Align.LEFT);
+		statesTable = new Table();
+		statesTable.setSizeFull();
+		statesTable.addContainerProperty(STATE_DATE , String.class, null, "Date", null, Align.LEFT);
+		statesTable.addContainerProperty(STATE_NAME , String.class, null, "State", null, Align.LEFT);
 
-		return t;
+		return statesTable;
 	}
 
 

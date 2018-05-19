@@ -176,6 +176,10 @@ public class MyUI extends UI {
 		root.removeComponent(this.header);
 		root.addComponent(header, 0);
 	}
+
+	public void clearShopingCart() {
+		getItemsCart().clear();
+	}
 	
 	
 

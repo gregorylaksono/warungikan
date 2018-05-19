@@ -45,7 +45,11 @@ public class ShoppingCartView extends VerticalLayout implements View{
 		addStyleName("product-container");
 		this.items = ((MyUI)UI.getCurrent()).getItemsCart();
 		decimalSymbols.setGroupingSeparator('.');
-		GridLayout grid = new GridLayout(5, items.size()+1);
+		int row = 1;
+		if(items != null && items.size() > 0){
+			row = items.size();
+		}
+		GridLayout grid = new GridLayout(5, row);
 		grid.setSizeUndefined();
 		grid.setSpacing(true);
 		grid.setMargin(true);
@@ -69,8 +73,8 @@ public class ShoppingCartView extends VerticalLayout implements View{
 		
 		Label delete = Factory.createLabelHeader("Hapus");
 		addComponentHeader(grid, delete);
-				
-		addShoppingItem( grid, items);
+
+		if(items != null)addShoppingItem( grid, items);
 		
 		addComponent(grid);
 		addComponent(buttonLayout);
@@ -92,7 +96,10 @@ public class ShoppingCartView extends VerticalLayout implements View{
 		next.addStyleName(ValoTheme.BUTTON_SMALL);
 		next.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 //		next.setIcon(VaadinIcons.ANGLE_RIGHT);
-		
+		next.setEnabled(false);
+		if(items != null && items.size() > 0){
+			next.setEnabled(true);
+		}
 		next.addClickListener( e ->{
 			((MyUI)UI.getCurrent()).setItemsCart(items);
 			UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_AGENT_SHIPMENT);

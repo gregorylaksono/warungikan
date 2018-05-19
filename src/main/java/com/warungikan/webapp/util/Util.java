@@ -16,4 +16,8 @@ public class Util {
 		DateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 		return format.format(d);
 	}
+	
+	public static Double calculateDistance(Long distance){
+		return Math.ceil(distance / 1000);
+	}
 }

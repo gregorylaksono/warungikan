@@ -100,6 +100,7 @@ public class MyProfileView extends VerticalLayout implements View{
 			name.getValue();
 		}
 	};
+	private VerticalLayout walletLayout;
 	public MyProfileView() {
 		sessionId = ((MyUI)UI.getCurrent()).getJwt();
 		Long balance = new Long(0);
@@ -122,7 +123,7 @@ public class MyProfileView extends VerticalLayout implements View{
 		setMargin(true);
 		setWidth(100, Unit.PERCENTAGE);
 		
-		VerticalLayout walletLayout = createWalletLayout();
+		walletLayout = createWalletLayout();
 		FormLayout authForm = createAuthForm();
 		FormLayout profileForm = createProfileForm();
 		
@@ -141,12 +142,14 @@ public class MyProfileView extends VerticalLayout implements View{
 		String statValue = null;
 		if(((MyUI)UI.getCurrent()).getRole().equals("USER")){
 			statValue = "CUSTOMER";
+			initUserData();
 		}else if(((MyUI)UI.getCurrent()).getRole().equals("AGENT")){
 			statValue = "AGENT";
 			initAgentData();
 		}else if(((MyUI)UI.getCurrent()).getRole().equals("ADMIN")){
 			statValue = "ADMIN";
 			initUserData();
+			removeComponent(walletLayout);
 		}
 		
 		status.setValue(statValue);
@@ -164,7 +167,7 @@ public class MyProfileView extends VerticalLayout implements View{
 		initUserData();
 		Map data = new Gson().fromJson(agent.getData(), Map.class);
 		String priceJson = (String) data.get(Constant.AGENT_DATA_KEY_PRICE_PER_KM);
-		price_per_km.setValue("Rp. "+Util.formatLocalAmount(Long.parseLong(priceJson)));
+		price_per_km.setValue(priceJson);
 	}
 
 	private VerticalLayout createWalletLayout() {

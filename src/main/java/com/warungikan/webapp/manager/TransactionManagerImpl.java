@@ -83,7 +83,7 @@ public class TransactionManagerImpl {
 			headers.add("Authorization", sessionId);
 			HttpEntity request = new HttpEntity<>(details,headers);
 			RestTemplate t = new RestTemplate();
-			ResponseEntity<Transaction> response = t.postForEntity(new URI(Constant.WS_POST_ADD_TRANSCTION_URL+"/"+agent_id+"/"+String.valueOf(total_km)), request, Transaction.class);
+			ResponseEntity<Transaction> response = t.postForEntity(new URI(Constant.WS_POST_ADD_TRANSCTION_URL+"/"+agent_id+"/"+String.valueOf(transport_prices)+"/"+String.valueOf(transport_prices)), request, Transaction.class);
 			
 			if(response.getStatusCodeValue() == 202){
 				return response.getBody();
@@ -261,7 +261,8 @@ public class TransactionManagerImpl {
 			}
 			else if(state.equals(TrxState.DELIVERING)) {
 				url = Constant.WS_POST_TRANSCTION_MARK_DELIVERING_URL;
-			}else {
+				
+			}else if(state.equals(TrxState.CANCEL)){
 				url = Constant.WS_POST_TRANSCTION_MARK_CANCEL_URL;
 			}
 			
@@ -394,5 +395,26 @@ public class TransactionManagerImpl {
 			throw new WarungIkanNetworkException("Could not connect to server");
 		}
 	}
-	
+	public List<TransactionDetail> getTransactionDetail(String sessionId, String trxId)throws UserSessionException,WarungIkanNetworkException{
+
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", sessionId);
+			HttpEntity request = new HttpEntity<>(headers);
+			RestTemplate t = new RestTemplate();
+			
+			ResponseEntity<List<TransactionDetail>> response = t.exchange(new URI(Constant.WS_GET_TRX_DETAIL_URL+"/"+trxId),HttpMethod.GET, request, new ParameterizedTypeReference<List<TransactionDetail>>(){});
+			if(response.getStatusCodeValue() == 202){
+				return response.getBody();
+			}
+			else if(response.getStatusCodeValue() == 401){
+				throw new UserSessionException("Could not identified user");
+			}else {
+				return null;
+			}
+			
+		} catch (Exception e) {
+			throw new WarungIkanNetworkException("Could not connect to server");
+		}
+	}
 }

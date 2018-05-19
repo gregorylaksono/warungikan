@@ -75,5 +75,14 @@ public class Factory {
 		d.addValidator(new StringLengthValidator(errorMessage, min, max, false));
 		return d;
 	}
+
+
+
+	public static Button createButtonBorderless(String name) {
+		Button b = new Button(name);
+		b.addStyleName(ValoTheme.BUTTON_TINY);
+		b.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+		return b;
+	}
 	
 }

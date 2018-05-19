@@ -29,4 +29,5 @@ public interface ITransactionService {
 	public List<Transaction> getAllTransaction(String jwt);
 	public List<TopupWalletHistory> getAllTopupHistory(String jwt);
 	public List<TopupWalletHistory> getTopupHistorySingleUser(String jwt);
+	public List<TransactionDetail> getTransactionDetail(String jwt, String transactionId);
 }

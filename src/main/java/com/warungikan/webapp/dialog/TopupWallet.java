@@ -90,6 +90,7 @@ public class TopupWallet extends VerticalLayout {
 		f.addComponent(comboboxUser);
 		f.addComponent(amountField);
 		f.addComponent(creditDateField);
+		f.addComponent(refNoBankField);
 		f.addComponent(submit);
 		
 		submit.addClickListener( e->{
@@ -107,6 +108,7 @@ public class TopupWallet extends VerticalLayout {
 					Notification.show("Topup gagal dilakukan", Type.ERROR_MESSAGE);
 				}
 				parent.update();
+				((MyUI)UI.getCurrent()).closeWindow();
 			}catch(Exception ex){
 				Notification.show("Input tidak valid", Type.ERROR_MESSAGE);
 			}

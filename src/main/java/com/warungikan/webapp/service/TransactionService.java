@@ -162,7 +162,7 @@ public class TransactionService implements ITransactionService {
 			logout();
 			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
 		} catch (WarungIkanNetworkException e) {
-			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+//			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
 		}
 		
 		return null;
@@ -230,8 +230,21 @@ public class TransactionService implements ITransactionService {
 	@Override
 	public List<TopupWalletHistory> getTopupHistorySingleUser(String jwt) {
 		try {
-			trxManager.getTopupsByUser(jwt);
+			return trxManager.getTopupsByUser(jwt);
 		}  catch (UserSessionException e) {
+			logout();
+			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
+		} catch (WarungIkanNetworkException e) {
+			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+		}
+		return null;
+	}
+
+	@Override
+	public List<TransactionDetail> getTransactionDetail(String jwt, String transactionId) {
+		try {
+			return trxManager.getTransactionDetail(jwt, transactionId);
+		}   catch (UserSessionException e) {
 			logout();
 			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
 		} catch (WarungIkanNetworkException e) {

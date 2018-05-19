@@ -38,7 +38,6 @@ public class AgentTransactionStatusView extends VerticalLayout implements View, 
 	private String jwt;
 	private Table t;
 
-
 	@Override
 	public void enter(ViewChangeEvent event) {
 		setSpacing(true);
@@ -58,7 +57,7 @@ public class AgentTransactionStatusView extends VerticalLayout implements View, 
 	private Table createTabel() {
 		Table t = new Table();
 		t.setCaption("Pesanan hari ini");
-		t.setWidth(650, Unit.PIXELS);
+		t.setWidth(800, Unit.PIXELS);
 		t.setHeight(500, Unit.PIXELS);
 
 		t.addContainerProperty(TRANSACTION_ID, String.class,null);
@@ -90,15 +89,16 @@ public class AgentTransactionStatusView extends VerticalLayout implements View, 
 	public void update() {
 		t.removeAllItems();
 		List<Transaction> trxs = ServiceInitator.getTransactionService().getTransactionAgent(jwt);
-		for(Transaction trx: trxs) {
+		for(final Transaction trx: trxs) {
 			Button detailsButton = new Button("Detail");
 			detailsButton.addStyleName(ValoTheme.BUTTON_TINY);
 			detailsButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
 			detailsButton.addClickListener(e->{
 				Window w = new Window();
-				w.setContent(new TransactionDetailMap(trx.getCustomer(), TransactionState.TransactionStateEnum.));
+				w.setContent(new TransactionDetailMap(trx, trx.getCustomer(), TransactionState.TransactionStateEnum.getStateCode(trx.getStatus()), AgentTransactionStatusView.this));
 				w.setModal(true);
 				w.setDraggable(false);
+				w.setResizable(false);
 				w.setClosable(true);
 				UI.getCurrent().addWindow(w);
 			});
