@@ -293,15 +293,13 @@ public class LoginView extends VerticalLayout implements View{
 				});
 		shoppingCart.addStyleName("cart-custom");
 		shoppingCart.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-//		shoppingCart.setIcon(VaadinIcons.CART_O);
-//		Label cartItem = new Label("2");
-//		cartItem.setWidth(null);
-//		cartItem.addStyleName("cincrement-label");
+
 		if(!role.equals("ADMIN") && !role.equals("AGENT")) {
 			buttonContainer.addComponent(shoppingCart);
 		}
 		
-//		buttonContainer.addComponent(cartItem);
+		Label cartItem = ((MyUI)UI.getCurrent()).getCartNumberNotifLabel();
+		buttonContainer.addComponent(cartItem);
 		
 		header.addComponent(logo);
 		header.addComponent(buttonContainer);
@@ -314,6 +312,8 @@ public class LoginView extends VerticalLayout implements View{
 		
 		return header;
 	}
+	
+	
 	
     MenuBar getMenuButton(String role) {
         MenuBar split = new MenuBar();

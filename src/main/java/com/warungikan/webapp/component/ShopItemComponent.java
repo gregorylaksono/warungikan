@@ -55,6 +55,7 @@ public class ShopItemComponent extends VerticalLayout{
 			((MyUI)UI.getCurrent()).setItemsCart(cart);
 			Notification.show("Berhasil dimasukan ke keranjang", Type.HUMANIZED_MESSAGE);
 			numberTf.setValue("0");
+			((MyUI)UI.getCurrent()).updateNotifLabel();
 		}
 		
 	};

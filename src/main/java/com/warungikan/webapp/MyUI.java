@@ -73,6 +73,8 @@ public class MyUI extends UI {
 
 	private VerticalLayout root;
 
+	private Label cartNumberNotifLabel;
+
 	@Override
 	protected void init(VaadinRequest request) {
 		root = new VerticalLayout();
@@ -94,6 +96,11 @@ public class MyUI extends UI {
 		n.addView(Constant.VIEW_LOGIN, LoginView.class);
 		n.addView(Constant.VIEW_REGISTER, RegisterView.class);
 		setNavigator(n);
+		
+		
+		cartNumberNotifLabel = new Label();
+		cartNumberNotifLabel.setWidth(null);
+		cartNumberNotifLabel.addStyleName("cincrement-label");
 	}
 
 	public Navigator getNavigator() {
@@ -180,7 +187,21 @@ public class MyUI extends UI {
 	public void clearShopingCart() {
 		getItemsCart().clear();
 	}
-	
-	
 
+	public Label getCartNumberNotifLabel() {
+		return cartNumberNotifLabel;
+	}
+
+	public void updateNotifLabel() {
+		int cartItemNum = 0;
+		for(ShopItemCart c: cartItems){
+			cartItemNum = c.getCount() + cartItemNum;
+		}
+		if(cartItemNum < 1){
+			cartNumberNotifLabel.setVisible(false);
+		}
+		cartNumberNotifLabel.setValue(String.valueOf(cartItemNum));
+		cartNumberNotifLabel.markAsDirty();
+	}
+	
 }

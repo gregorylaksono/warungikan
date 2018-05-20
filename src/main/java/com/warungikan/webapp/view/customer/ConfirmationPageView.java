@@ -98,6 +98,7 @@ public class ConfirmationPageView extends VerticalLayout implements View {
 				if(result != null){
 					UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_TRANSACTION);
 					((MyUI)UI.getCurrent()).clearShopingCart();
+					((MyUI)UI.getCurrent()).updateNotifLabel();
 					Notification.show("Transaksi berhasil", Type.TRAY_NOTIFICATION);
 				}else{
 					UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_SHOP);
