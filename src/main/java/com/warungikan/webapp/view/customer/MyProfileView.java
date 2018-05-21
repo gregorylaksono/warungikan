@@ -7,9 +7,11 @@ import org.warungikan.db.model.AgentData;
 import org.warungikan.db.model.User;
 
 import com.google.gson.Gson;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.tapio.googlemaps.client.LatLon;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -58,8 +60,9 @@ public class MyProfileView extends VerticalLayout implements View{
 		public void buttonClick(ClickEvent event) {
 			VerticalLayout l = new VerticalLayout();
 			Button save = Factory.createButtonOk("Save location");
-			MapPage map = new MapPage("My location", true);
+			MapPage map = new MapPage("My location", true, new LatLon(user.getLatitude(), user.getLongitude()));
 			l.setSpacing(true);
+			l.setMargin(true);
 			l.addComponent(map);
 			l.addComponent(save);
 			
@@ -94,13 +97,20 @@ public class MyProfileView extends VerticalLayout implements View{
 		
 		@Override
 		public void buttonClick(ClickEvent event) {
-			address.getValue();
-			telpNo.getValue();
-			email.getValue();
-			name.getValue();
+			validate();
+			Boolean result = ServiceInitator.getUserService().updateUser(sessionId, name.getValue(), email.getValue(), telpNo.getValue(), address.getValue(), city.getValue());
+			if(result){
+				Notification.show("Perubahan berhasil dilakukan", Type.HUMANIZED_MESSAGE);
+				user = ServiceInitator.getUserService().getUser(sessionId);
+				initUserData();
+			}else{
+				Notification.show("Terjadi kesalahan ketika melakukan perubahan", Type.ERROR_MESSAGE);
+			}
 		}
 	};
 	private VerticalLayout walletLayout;
+	private TextField city;
+	private Label agentDataTransportPriceLbl;
 	public MyProfileView() {
 		sessionId = ((MyUI)UI.getCurrent()).getJwt();
 		Long balance = new Long(0);
@@ -155,12 +165,21 @@ public class MyProfileView extends VerticalLayout implements View{
 		status.setValue(statValue);
 		
 	}
+	
+	private void validate(){
+		name.validate();
+		address.validate();
+		city.validate();
+		telpNo.validate();
+		email.validate();
+	}
 
 	private void initUserData() {
 		name.setValue(user.getName());
 		address.setValue(user.getAddress());
 		telpNo.setValue(user.getTelpNo());
 		email.setValue(user.getEmail());
+		city.setValue(user.getCity());
 	}
 
 	private void initAgentData() {
@@ -168,6 +187,8 @@ public class MyProfileView extends VerticalLayout implements View{
 		Map data = new Gson().fromJson(agent.getData(), Map.class);
 		String priceJson = (String) data.get(Constant.AGENT_DATA_KEY_PRICE_PER_KM);
 		price_per_km.setValue(priceJson);
+		price_per_km.setReadOnly(true);
+		agentDataTransportPriceLbl.setVisible(true);
 	}
 
 	private VerticalLayout createWalletLayout() {
@@ -196,11 +217,33 @@ public class MyProfileView extends VerticalLayout implements View{
 		status = new Label("Status");
 		name = new TextField("Nama");
 		address = new TextArea("Alamat");
+		city = new TextField("City");
 		telpNo = new TextField("No. Telp");
 		email = new TextField("Email");
 		price_per_km = new TextField("Price per km");
 		updateProfileBtn = Factory.createButtonOk("Update");
 		changeLocationBtn = Factory.createButtonOk("Ubah lokasi"); 
+		
+		name.addValidator(new StringLengthValidator("Nama harus diisi. Minimal char 3 - 30", 3, 30, false));
+		address.addValidator(new StringLengthValidator("Alamat harus diisi. Minimal char 10 - 50", 10, 50, false));
+		city.addValidator(new StringLengthValidator("Kota harus diisi. Minimal char 3 - 20", 3, 20, false));
+		telpNo.addValidator(new StringLengthValidator("telpNo harus diisi. Minimal char 7 - 20", 7, 20, false));
+		email.addValidator(new StringLengthValidator("Email harus diisi. Minimal char 6 - 50", 6, 50, false));
+		
+		name.setRequired(true);
+		address.setRequired(true);
+		city.setRequired(true);
+		telpNo.setRequired(true);
+		email.setRequired(true);
+		
+		name.setValidationVisible(true);
+		address.setValidationVisible(true);
+		city.setValidationVisible(true);
+		telpNo.setValidationVisible(true);
+		email.setValidationVisible(true);
+		
+		agentDataTransportPriceLbl = new Label("Harga transport hanya dapat diubah oleh admin");
+		agentDataTransportPriceLbl.setVisible(false);
 		
 		HorizontalLayout buttonLayout = new HorizontalLayout();
 		buttonLayout.setSpacing(true);
@@ -210,9 +253,11 @@ public class MyProfileView extends VerticalLayout implements View{
 		profileForm.addComponent(status);
 		profileForm.addComponent(name);
 		profileForm.addComponent(address);
+		profileForm.addComponent(city);
 		profileForm.addComponent(telpNo);
 		profileForm.addComponent(email);
 		profileForm.addComponent(price_per_km);
+		profileForm.addComponent(agentDataTransportPriceLbl);
 		profileForm.addComponent(buttonLayout);
 		price_per_km.setVisible(false);
 		
@@ -234,6 +279,19 @@ public class MyProfileView extends VerticalLayout implements View{
 		PasswordField pwdField = new PasswordField("Password baru");
 		PasswordField cnfPwdField = new PasswordField("Password baru confimation");
 		Button authPwdButton = Factory.createButtonOk("Update");
+		authPwdButton.addClickListener(e->{
+			if(pwdField.getValue().equals(cnfPwdField.getValue())){
+				Boolean result = ServiceInitator.getUserService().changePassword(sessionId, oldPasswordField.getValue(), pwdField.getValue());
+				if(result){
+					Notification.show("Password berhasil diubah. Kami sarankan untuk logout dan login kembali", Type.TRAY_NOTIFICATION);
+				}else{
+					Notification.show("Perubahan password tidak dapat dilakukan, mohon kontak admin kami. Terima kasih", Type.ERROR_MESSAGE);
+				}
+				
+			}else{
+				Notification.show("Password tidak sama", Type.ERROR_MESSAGE);
+			}
+		});
 		authForm.addComponent(oldPasswordField);
 		authForm.addComponent(pwdField);
 		authForm.addComponent(cnfPwdField);

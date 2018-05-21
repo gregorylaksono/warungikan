@@ -236,7 +236,7 @@ public class UserManagerImpl  {
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("Authorization", sessionId);
 			HttpEntity request = new HttpEntity<>(u, headers);
-			ResponseEntity<BasicResponse> response = r.postForEntity(new URI(Constant.WS_UPDATE_SELF_USER_URL), request, BasicResponse.class);
+			ResponseEntity<BasicResponse> response = r.exchange(new URI(Constant.WS_UPDATE_SELF_USER_URL),HttpMethod.PUT, request, BasicResponse.class);
 			return response.getStatusCodeValue();
 
 		} catch (Exception e) {
@@ -248,7 +248,7 @@ public class UserManagerImpl  {
 		}
 		return null;
 	}
-	public Boolean changePassword(String sessionId,String user_id, String newPassword, String oldPassword) throws UserSessionException,WarungIkanNetworkException{
+	public Boolean changePassword(String sessionId,String newPassword, String oldPassword) throws UserSessionException,WarungIkanNetworkException{
 		try {
 			ChangePassword pwd = new ChangePassword();
 			pwd.setNewPassword(newPassword);
@@ -258,7 +258,7 @@ public class UserManagerImpl  {
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("Authorization", sessionId);
 			HttpEntity request = new HttpEntity<>(pwd, headers);
-			ResponseEntity<BasicResponse> response = r.exchange(new URI(Constant.WS_UPDATE_CHANGE_PWD_URL+"/"+user_id),HttpMethod.PUT, request, BasicResponse.class);
+			ResponseEntity<BasicResponse> response = r.exchange(new URI(Constant.WS_UPDATE_CHANGE_PWD_URL),HttpMethod.PUT, request, BasicResponse.class);
 			if(response.getBody().getCode().equals("SUCCESS")){
 				return true;
 			}else{

@@ -113,7 +113,14 @@ public class UserService implements IUserService{
 
 	@Override
 	public Boolean updateCoordinate(String jwt, VLatLng coordinate) {
-		
+		try {
+			return userManager.updateCoordinate(jwt, coordinate);
+		} catch (UserSessionException e) {
+			logout();
+			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
+		} catch (WarungIkanNetworkException e) {
+			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+		}
 		return null;
 	}
 
@@ -150,6 +157,19 @@ public class UserService implements IUserService{
 		try {
 			return userManager.createUserCustomer(sessionId, name, email, telNo, address, city, latitude, longitude, password);
 		} catch (UserSessionException e) {
+			logout();
+			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
+		} catch (WarungIkanNetworkException e) {
+			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+		}
+		return false;
+	}
+
+	@Override
+	public Boolean changePassword(String jwt, String oldPwd, String newPwd) {
+		try {
+			return userManager.changePassword(jwt, newPwd, oldPwd);
+		}catch (UserSessionException e) {
 			logout();
 			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
 		} catch (WarungIkanNetworkException e) {

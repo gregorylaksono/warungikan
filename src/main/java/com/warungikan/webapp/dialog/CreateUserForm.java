@@ -114,7 +114,7 @@ public class CreateUserForm extends HorizontalLayout {
 		createUser = Factory.createButtonOk("Save user");
 		
 		FormLayout f = createContent();
-		map = new MapPage("Tentukan letak alamat", true);
+		map = new MapPage("Tentukan letak alamat", true, null);
 		
 		addComponent(f);
 

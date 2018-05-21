@@ -40,9 +40,11 @@ public class MapPage extends VerticalLayout {
 	private AutocompleteField addressText;
 	private RSAddName result = null;
 	private boolean isValidationRequired;
-	public MapPage(String caption, boolean isValidationRequired){
+	private LatLon point;
+	public MapPage(String caption, boolean isValidationRequired, LatLon point){
 		this.isValidationRequired = isValidationRequired;
 		setCaption(caption);
+		this.point = point;
 		setWidth(630, Unit.PIXELS);
 		addressText = createCompanyAutoComplete();
 		addressText.addValidator(new StringLengthValidator("Koordinat/alamat via map diperlukan", 3, 100, false));
@@ -53,6 +55,11 @@ public class MapPage extends VerticalLayout {
 		addressMap.setMinZoom(4);
 		addressMap.setMaxZoom(16);
 		addressMap.setZoom(16);
+		
+		if(point != null){
+			addressMap.addMarker("My location", point, true, null);
+			addressMap.setCenter(point);
+		}
 		
 		addComponent(addressText);
 		addComponent(addressMap);

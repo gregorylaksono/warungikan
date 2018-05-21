@@ -62,7 +62,7 @@ public class RegisterView extends VerticalLayout implements View{
 		cityF  = new TextField("Kota");
 		pwdF = new PasswordField("Passoword");
 		pwd2F = new PasswordField("Passoword sekali lagi");
-		map = new MapPage("Tentukan lokasi tempat anda", true);
+		map = new MapPage("Tentukan lokasi tempat anda", true, null);
 
 		l.addComponent(cap);
 		l.addComponent(emailF);
@@ -103,7 +103,7 @@ public class RegisterView extends VerticalLayout implements View{
 				return;
 			}
 			RSAddName add = map.getResult();
-			emailF.getValue();
+			
 			Boolean result = ServiceInitator.getUserService().createUserCustomer("", nameF.getValue(), emailF.getValue(), telpF.getValue(), addressF.getValue(), cityF.getValue(), add.getLatitude(), add.getLongitude(), pwdF.getValue());
 			if(result){
 				createSuccessMessage();

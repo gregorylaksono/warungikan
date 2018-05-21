@@ -9,6 +9,7 @@ import org.warungikan.db.model.AgentData;
 import org.warungikan.db.model.User;
 
 import com.warungikan.webapp.exception.WarungIkanNetworkException;
+import com.vaadin.ui.PasswordField;
 import com.warungikan.webapp.exception.UserSessionException;
 
 public interface IUserService {
@@ -27,4 +28,5 @@ public interface IUserService {
 	public AgentData getAgentData(String sessionId);
 	public Boolean updateCoordinate(String jwt,VLatLng coordinate);
 	public Boolean verifyUser(String code);
+	public Boolean changePassword(String jwt, String oldPwd, String newPwd);
 }
