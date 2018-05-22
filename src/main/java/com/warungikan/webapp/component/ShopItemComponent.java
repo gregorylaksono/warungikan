@@ -9,6 +9,8 @@ import org.warungikan.db.model.ShopItem;
 
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -62,17 +64,16 @@ public class ShopItemComponent extends VerticalLayout{
 	private TextField numberTf;
 
 	public ShopItemComponent(ShopItem fish) {
-		addStyleName("fitem-component");
-		setHeight(250, Unit.PIXELS);
-		setWidth(280, Unit.PIXELS);
+//		addStyleName("fitem-component");
+		setHeight(300, Unit.PIXELS);
+		setWidth(250, Unit.PIXELS);
 		this.fish = fish;
-		setMargin(false);
-		setSpacing(false);
-		
+		setMargin(new MarginInfo(false, false, true, false));
+		setSpacing(true);
 		
 		Image img = new Image();
 		img.setWidth(100,Unit.PERCENTAGE);
-		img.setHeight(120,Unit.PIXELS);
+//		img.setHeight(120,Unit.PIXELS);
 		img.setSource(new ExternalResource(fish.getUrl()));
 		
 		addComponent(img);
@@ -83,13 +84,14 @@ public class ShopItemComponent extends VerticalLayout{
 		name.setWidth(null);
 		addComponent(name);
 		
-		Label weight = new Label(String.valueOf(fish.getWeight())+" gr");
+		Label weight = new Label(String.valueOf(fish.getWeight()));
 		weight.addStyleName(ValoTheme.LABEL_SMALL);
 		weight.setWidth(null);
 		addComponent(weight);
 		
 		
-		Label price = new Label("Rp."+String.valueOf(Util.formatLocalAmount(fish.getPrice())));
+		Label price = new Label("<b>Rp. "+String.valueOf(Util.formatLocalAmount(fish.getPrice()))+"</b>");
+		price.setContentMode(ContentMode.HTML);
 		price.addStyleName(ValoTheme.LABEL_SMALL);
 		price.setWidth(null);
 		addComponent(price);
@@ -104,12 +106,11 @@ public class ShopItemComponent extends VerticalLayout{
 		numberTf.addStyleName(ValoTheme.TEXTFIELD_SMALL);
 		numberTf.setValue("0");
 		
-        Button addToCartButton = new Button("Add to cart");
-        addToCartButton.addStyleName(ValoTheme.BUTTON_SMALL);
-        addToCartButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        Button addToCartButton = new Button("ADD TO CART");
+        addToCartButton.setPrimaryStyleName("cart-button");
+        addToCartButton.setWidth(100, Unit.PERCENTAGE);
         addToCartButton.addClickListener(addToCartListener );
        
-        
         bottomLayout.addComponent(numberTf);
         bottomLayout.addComponent(addToCartButton);
         bottomLayout.setComponentAlignment(numberTf, Alignment.TOP_LEFT);
@@ -117,14 +118,19 @@ public class ShopItemComponent extends VerticalLayout{
         bottomLayout.setExpandRatio(numberTf, 0.0f);
         bottomLayout.setExpandRatio(addToCartButton, 1.0f);
         
-        addComponent(bottomLayout);
-        setComponentAlignment(bottomLayout, Alignment.BOTTOM_CENTER);
+        addComponent(addToCartButton);
+//        addComponent(bottomLayout);
+//        setComponentAlignment(bottomLayout, Alignment.BOTTOM_CENTER);
         
         setComponentAlignment(name, Alignment.TOP_LEFT);
         setExpandRatio(img, 1.0f);
         setExpandRatio(name, 0.0f);
         setExpandRatio(weight, 0.0f);
         setExpandRatio(price, 0.0f);
-        setExpandRatio(bottomLayout, 0.0f);
+        setComponentAlignment(name, Alignment.BOTTOM_CENTER);
+        setComponentAlignment(weight, Alignment.BOTTOM_CENTER);
+        setComponentAlignment(price, Alignment.BOTTOM_CENTER);
+        setComponentAlignment(addToCartButton, Alignment.BOTTOM_CENTER);
+//        setExpandRatio(bottomLayout, 0.0f);
 	}
 }

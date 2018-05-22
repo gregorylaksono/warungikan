@@ -60,7 +60,7 @@ public class ShopItemView extends VerticalLayout implements View, IParentWindowS
 			item.getItemProperty(NAME).setValue(i.getName());
 			item.getItemProperty(URL).setValue(i.getUrl());
 			item.getItemProperty(PRICE).setValue("Rp. "+Util.formatLocalAmount(i.getPrice()));
-			item.getItemProperty(WEIGHT).setValue(i.getWeight()+" gr");
+			item.getItemProperty(WEIGHT).setValue(i.getWeight());
 			item.getItemProperty(DESCRIPTION).setValue(i.getDescription());
 		}
 	}
@@ -69,7 +69,7 @@ public class ShopItemView extends VerticalLayout implements View, IParentWindowS
 		VerticalLayout l = new VerticalLayout();
 		l.setSpacing(true);
 		l.setWidth(70, Unit.PERCENTAGE);
-				Button createNewItemBtn = new Button("Tambah baru");
+		Button createNewItemBtn = new Button("Tambah baru");
 		createNewItemBtn.addStyleName(ValoTheme.BUTTON_TINY);
 		createNewItemBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
 		createNewItemBtn.addClickListener( e ->{

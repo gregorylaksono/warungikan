@@ -71,7 +71,7 @@ public class ShopItemForm extends VerticalLayout {
 		urlF.addValidator(new StringLengthValidator("URL muss be 5-15 character (was {0}). ", 3, 70, false));
 		urlF.addValidator(new RegexpValidator(Constant.VALIDATOR_REGEX_URL, "URL muss be with format http://.. or https://.." ));
 		priceF.addValidator(new RegexpValidator(Constant.VALIDATOR_REGEX_AMOUNT, "Price muss be numeric"));
-		weightF.addValidator(new RegexpValidator(Constant.VALIDATOR_REGEX_AMOUNT, "Weight muss be numeric"));
+		weightF.addValidator(new StringLengthValidator("Name muss be 3-30 character (was {0}). ", 3, 30, false));
 		descriptionF.addValidator(new StringLengthValidator("Description muss be 10-200 character (was {0}). ", 10, 200, false));
 		
 		f.addComponent(nameF);
