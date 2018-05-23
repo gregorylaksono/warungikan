@@ -65,7 +65,7 @@ public class ShopItemComponent extends VerticalLayout{
 
 	public ShopItemComponent(ShopItem fish) {
 //		addStyleName("fitem-component");
-		setHeight(300, Unit.PIXELS);
+		setHeight(345, Unit.PIXELS);
 		setWidth(250, Unit.PIXELS);
 		this.fish = fish;
 		setMargin(new MarginInfo(false, false, true, false));
@@ -76,31 +76,28 @@ public class ShopItemComponent extends VerticalLayout{
 //		img.setHeight(120,Unit.PIXELS);
 		img.setSource(new ExternalResource(fish.getUrl()));
 		
-		addComponent(img);
 		
 		Label name = new Label(fish.getName());
 		name.addStyleName(ValoTheme.LABEL_LARGE);
 		name.addStyleName(ValoTheme.LABEL_BOLD);
 		name.setWidth(null);
-		addComponent(name);
 		
 		Label weight = new Label(String.valueOf(fish.getWeight()));
 		weight.addStyleName(ValoTheme.LABEL_SMALL);
 		weight.setWidth(null);
-		addComponent(weight);
+//		addComponent(weight);
 		
 		
 		Label price = new Label("<b>Rp. "+String.valueOf(Util.formatLocalAmount(fish.getPrice()))+"</b>");
 		price.setContentMode(ContentMode.HTML);
 		price.addStyleName(ValoTheme.LABEL_SMALL);
 		price.setWidth(null);
-		addComponent(price);
 		
-		HorizontalLayout bottomLayout = new HorizontalLayout();
+		VerticalLayout bottomLayout = new VerticalLayout();
 		bottomLayout.setSpacing(true);
 		bottomLayout.setWidth(100, Unit.PERCENTAGE);
 		bottomLayout.setHeight(40,Unit.PIXELS);
-
+		
 		numberTf = new TextField();
 		numberTf.setWidth(60, Unit.PIXELS);
 		numberTf.addStyleName(ValoTheme.TEXTFIELD_SMALL);
@@ -111,26 +108,21 @@ public class ShopItemComponent extends VerticalLayout{
         addToCartButton.setWidth(100, Unit.PERCENTAGE);
         addToCartButton.addClickListener(addToCartListener );
        
-        bottomLayout.addComponent(numberTf);
-        bottomLayout.addComponent(addToCartButton);
-        bottomLayout.setComponentAlignment(numberTf, Alignment.TOP_LEFT);
-        bottomLayout.setComponentAlignment(addToCartButton, Alignment.TOP_LEFT);
-        bottomLayout.setExpandRatio(numberTf, 0.0f);
-        bottomLayout.setExpandRatio(addToCartButton, 1.0f);
+        bottomLayout.addComponent(weight);
+        bottomLayout.addComponent(price);
+        bottomLayout.setComponentAlignment(weight, Alignment.BOTTOM_CENTER);
+        bottomLayout.setComponentAlignment(price, Alignment.BOTTOM_CENTER);
         
-        addComponent(addToCartButton);
-//        addComponent(bottomLayout);
-//        setComponentAlignment(bottomLayout, Alignment.BOTTOM_CENTER);
+        addComponent(name);
+		addComponent(img);
+        addComponent(bottomLayout);
+        addComponent(addToCartButton);   
         
-        setComponentAlignment(name, Alignment.TOP_LEFT);
+        setComponentAlignment(name, Alignment.TOP_CENTER);
         setExpandRatio(img, 1.0f);
+        setExpandRatio(bottomLayout, 0.0f);
         setExpandRatio(name, 0.0f);
-        setExpandRatio(weight, 0.0f);
-        setExpandRatio(price, 0.0f);
-        setComponentAlignment(name, Alignment.BOTTOM_CENTER);
-        setComponentAlignment(weight, Alignment.BOTTOM_CENTER);
-        setComponentAlignment(price, Alignment.BOTTOM_CENTER);
+        setExpandRatio(addToCartButton, 0.0f);
         setComponentAlignment(addToCartButton, Alignment.BOTTOM_CENTER);
-//        setExpandRatio(bottomLayout, 0.0f);
 	}
 }
