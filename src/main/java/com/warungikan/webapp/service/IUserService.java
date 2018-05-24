@@ -6,6 +6,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.warungikan.api.model.request.VLatLng;
 import org.warungikan.db.model.AgentData;
+import org.warungikan.db.model.TopupWalletHistory;
 import org.warungikan.db.model.User;
 
 import com.warungikan.webapp.exception.WarungIkanNetworkException;
@@ -29,4 +30,5 @@ public interface IUserService {
 	public Boolean updateCoordinate(String jwt,VLatLng coordinate);
 	public Boolean verifyUser(String code);
 	public Boolean changePassword(String jwt, String oldPwd, String newPwd);
+	public List<TopupWalletHistory> getTopupHistory(String jwt);
 }

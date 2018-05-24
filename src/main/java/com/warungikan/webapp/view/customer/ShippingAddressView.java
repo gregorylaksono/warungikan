@@ -14,6 +14,7 @@ import org.warungikan.db.model.User;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
@@ -40,7 +41,7 @@ public class ShippingAddressView extends VerticalLayout implements View{
 	private static final long serialVersionUID = 854928347753429074L;
 	//	private GoogleMap addressMap;
 	private List<ShopItemCart> items;
-	private GridLayout agentsLayout;
+	private AbstractLayout agentsLayout;
 	ITransactionService trxService = new TransactionService();
 	private String jwt;
 	private User user;
@@ -147,20 +148,32 @@ public class ShippingAddressView extends VerticalLayout implements View{
 		return layout;
 	}
 
-	private GridLayout createAgentsLayout(List<AgentProduct> agents) {
+	private AbstractLayout createAgentsLayout(List<AgentProduct> agents) {
 		agents = agents.stream().sorted((o1, o2) -> o1.getDistance().compareTo(o2.getDistance())).collect(Collectors.toList());
-		GridLayout g = new GridLayout(3, 6);
-		g.setWidth(780, Unit.PIXELS);
-		g.setSpacing(true);
-		g.setMargin(true);
-		g.addStyleName("product-container");
-		g.setMargin(true);
-		for(AgentProduct a: agents) {
-			AgentProductComponent comp = new AgentProductComponent(a);
-			g.addComponent(comp);
+		if(agents.size() > 0){
+			GridLayout g = new GridLayout(3, 6);
+			g.setWidth(780, Unit.PIXELS);
+			g.setSpacing(true);
+			g.setMargin(true);
+			g.addStyleName("product-container");
+			g.setMargin(true);
+			for(AgentProduct a: agents) {
+				AgentProductComponent comp = new AgentProductComponent(a);
+				g.addComponent(comp);
+			}
+			return g;
+		}else{
+			VerticalLayout l = new VerticalLayout();
+			l.setWidth(780, Unit.PIXELS);
+			l.setSpacing(true);
+			l.setMargin(true);
+			l.addStyleName("product-container");
+			Label la = new Label("Tidak ditemukan agent");
+			la.setWidth(null);
+			l.addComponent(la);
+			l.setComponentAlignment(la, Alignment.MIDDLE_CENTER);
+			return l;
 		}
-
-		return g;
 	}
 
 	public static void main(String[] args) {

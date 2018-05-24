@@ -53,6 +53,7 @@ import com.warungikan.webapp.view.agent.AgentTransactionStatusView;
 import com.warungikan.webapp.view.customer.ConfirmationPageView;
 import com.warungikan.webapp.view.customer.MyProfileView;
 import com.warungikan.webapp.view.customer.MyTransaction;
+import com.warungikan.webapp.view.customer.MyWalletTransactionView;
 import com.warungikan.webapp.view.customer.ShippingAddressView;
 import com.warungikan.webapp.view.customer.ShopView;
 import com.warungikan.webapp.view.customer.ShoppingCartView;
@@ -261,6 +262,7 @@ public class LoginView extends VerticalLayout implements View{
 		n.addView(Constant.VIEW_MY_PROFILE, MyProfileView.class);
 		n.addView(Constant.VIEW_CONFIRM_PAGE, ConfirmationPageView.class);
 		n.addView(Constant.VIEW_MY_TRANSACTION, MyTransaction.class);
+		n.addView(Constant.VIEW_MY_WALLET_HISTORY, MyWalletTransactionView.class);
 		
 		navigatorContent.add(Constant.VIEW_SHOP);
 		navigatorContent.add(Constant.VIEW_CART_DETAIL);
@@ -269,6 +271,7 @@ public class LoginView extends VerticalLayout implements View{
 		navigatorContent.add(Constant.VIEW_MY_PROFILE);
 		navigatorContent.add(Constant.VIEW_CONFIRM_PAGE);
 		navigatorContent.add(Constant.VIEW_MY_TRANSACTION);
+		navigatorContent.add(Constant.VIEW_MY_WALLET_HISTORY);
 		
 		defaultNavigationView = Constant.VIEW_SHOP;
 		
@@ -325,7 +328,7 @@ public class LoginView extends VerticalLayout implements View{
     	String jwt = ((MyUI)UI.getCurrent()).getJwt();
     	Long balance = ServiceInitator.getTransactionService().getBalanceCustomer(jwt);
     	
-    	Button b = Factory.createButtonBorderless("Rp. "+Util.formatLocalAmount(balance));
+    	Button b = Factory.createButtonBorderless("Saldo anda Rp. "+Util.formatLocalAmount(balance));
     	b.addClickListener(e->{
     		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
     		n.navigateTo(Constant.VIEW_MY_PROFILE);

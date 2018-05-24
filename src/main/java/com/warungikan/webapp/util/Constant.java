@@ -17,6 +17,7 @@ public class Constant {
 	public static final String VIEW_CONFIRM_USER_PAGE = "v_confirmation";
 	public static final String VIEW_REGISTER = "register";
 	public static final String VIEW_ITEM_STOCK = "item_stock";
+	public static final String VIEW_MY_WALLET_HISTORY = "my_wallet_history";
 	
 	public static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
 	public static final String PLACES_API_GEOCODE = "https://maps.googleapis.com/maps/api/geocode";
@@ -84,6 +85,7 @@ public class Constant {
 	public static final String HEADER_STRING = "Authorization";
 	public static final String IV = "AAAAAAAAAAAAFFFF";
 	public static final String ENC_KEY = "NhzeepOXvXgSTrOxMuNMT1zHO6PQj2Gc6JnRQgMD";
+	
 	
 	
 	

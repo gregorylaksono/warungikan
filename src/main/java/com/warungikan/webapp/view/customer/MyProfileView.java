@@ -200,11 +200,19 @@ public class MyProfileView extends VerticalLayout implements View{
 		layout.addStyleName("product-container");
 		Label header = Factory.createLabelHeaderNormal("Saldo sekarang : Rp. "+formatedBalance);
 		Button topupButton = Factory.createButtonOk("Top up saldo");
+		Button topupHistory = Factory.createButtonOk("Top up history");
+		topupHistory.addClickListener(e->{
+			((MyUI)UI.getCurrent()).getNavigator().navigateTo(Constant.VIEW_MY_WALLET_HISTORY);
+		});
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.setSpacing(true);
+		buttonLayout.addComponent(topupButton);
+		buttonLayout.addComponent(topupHistory);
 		
 		layout.addComponent(header);
-		layout.addComponent(topupButton);
+		layout.addComponent(buttonLayout);
 		layout.setExpandRatio(header, 1.0f);
-		layout.setExpandRatio(topupButton, 0.0f);
+		layout.setExpandRatio(buttonLayout, 0.0f);
 		
 		return layout;
 	}

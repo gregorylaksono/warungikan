@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.client.ResourceAccessException;
 import org.warungikan.api.model.request.VLatLng;
 import org.warungikan.db.model.AgentData;
+import org.warungikan.db.model.TopupWalletHistory;
 import org.warungikan.db.model.User;
 
 import com.vaadin.server.Page;
@@ -176,6 +177,19 @@ public class UserService implements IUserService{
 			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
 		}
 		return false;
+	}
+
+	@Override
+	public List<TopupWalletHistory> getTopupHistory(String jwt) {
+		try {
+			return userManager.getWalletHistoryUser(jwt);
+		}catch (UserSessionException e) {
+			logout();
+			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
+		} catch (WarungIkanNetworkException e) {
+			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+		}
+		return null;
 	}
 
 

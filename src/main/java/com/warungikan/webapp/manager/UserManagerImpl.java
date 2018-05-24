@@ -26,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import org.warungikan.api.model.ChangePassword;
 import org.warungikan.api.model.request.VLatLng;
 import org.warungikan.db.model.AgentData;
+import org.warungikan.db.model.TopupWalletHistory;
 import org.warungikan.db.model.User;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -312,6 +313,25 @@ public class UserManagerImpl  {
 		} catch (Exception e) {
 			throw new WarungIkanNetworkException("Could not connect to server");
 		}
+	}
+
+	public List<TopupWalletHistory> getWalletHistoryUser(String jwt) throws UserSessionException,WarungIkanNetworkException{
+		try {
+			RestTemplate r = new RestTemplate();
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", jwt);
+			HttpEntity request = new HttpEntity<>(headers);
+			ResponseEntity<List<TopupWalletHistory>> response = r.exchange(new URI(Constant.WS_GET_ALL_USER_URL),HttpMethod.GET, request, new ParameterizedTypeReference<List<TopupWalletHistory>>(){});
+			List<TopupWalletHistory> body = response.getBody();
+			return body;
+		} catch (Exception e) {
+			if((e instanceof HttpClientErrorException) || (e instanceof HttpServerErrorException)){
+				throw new UserSessionException("token is wrong");
+			}else if(e instanceof ResourceAccessException){
+				throw new WarungIkanNetworkException("Could not connect to server");
+			}
+		}
+		return new ArrayList<>();
 	}
 
 
