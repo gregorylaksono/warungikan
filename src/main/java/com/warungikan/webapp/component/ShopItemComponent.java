@@ -23,6 +23,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import com.warungikan.webapp.MyUI;
 import com.warungikan.webapp.model.FishShopItem;
@@ -41,26 +42,17 @@ public class ShopItemComponent extends VerticalLayout{
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			List<ShopItemCart> cart = ((MyUI)UI.getCurrent()).getItemsCart();
-			if(cart == null) cart = new ArrayList();
-			List<ShopItemCart> single = cart.stream().filter(f -> f.getFish().getName().equals(fish.getName())).collect(Collectors.toList());
-			Integer num = Integer.parseInt(numberTf.getValue());
-			if(single.size() == 1) {
-				ShopItemCart item = single.get(0);
-				item.setCount(item.getCount()+num);
-				cart.remove(item);
-				cart.add(item);
-				
-			}else{
-				cart.add(new ShopItemCart(fish, num));
-			}
-			((MyUI)UI.getCurrent()).setItemsCart(cart);
-			Notification.show("Berhasil dimasukan ke keranjang", Type.HUMANIZED_MESSAGE);
-			numberTf.setValue("0");
-			((MyUI)UI.getCurrent()).updateNotifLabel();
+			Window w = new Window();
+			w.setContent(new CartAmountComponent(fish));
+			w.setModal(true);
+			w.setClosable(true);
+			w.setDraggable(false);
+			w.setResizable(false);
+			UI.getCurrent().addWindow(w);
 		}
 		
 	};
+
 	private TextField numberTf;
 
 	public ShopItemComponent(ShopItem fish) {
@@ -73,9 +65,7 @@ public class ShopItemComponent extends VerticalLayout{
 		
 		Image img = new Image();
 		img.setWidth(100,Unit.PERCENTAGE);
-//		img.setHeight(120,Unit.PIXELS);
 		img.setSource(new ExternalResource(fish.getUrl()));
-		
 		
 		Label name = new Label(fish.getName());
 		name.addStyleName(ValoTheme.LABEL_LARGE);
@@ -85,8 +75,6 @@ public class ShopItemComponent extends VerticalLayout{
 		Label weight = new Label(String.valueOf(fish.getWeight()));
 		weight.addStyleName(ValoTheme.LABEL_SMALL);
 		weight.setWidth(null);
-//		addComponent(weight);
-		
 		
 		Label price = new Label("<b>Rp. "+String.valueOf(Util.formatLocalAmount(fish.getPrice()))+"</b>");
 		price.setContentMode(ContentMode.HTML);
@@ -97,11 +85,6 @@ public class ShopItemComponent extends VerticalLayout{
 		bottomLayout.setSpacing(true);
 		bottomLayout.setWidth(100, Unit.PERCENTAGE);
 		bottomLayout.setHeight(40,Unit.PIXELS);
-		
-		numberTf = new TextField();
-		numberTf.setWidth(60, Unit.PIXELS);
-		numberTf.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-		numberTf.setValue("0");
 		
         Button addToCartButton = new Button("ADD TO CART");
         addToCartButton.setPrimaryStyleName("cart-button");

@@ -199,6 +199,8 @@ public class MyUI extends UI {
 		}
 		if(cartItemNum < 1){
 			cartNumberNotifLabel.setVisible(false);
+		}else{
+			cartNumberNotifLabel.setVisible(true);
 		}
 		cartNumberNotifLabel.setValue(String.valueOf(cartItemNum));
 		cartNumberNotifLabel.markAsDirty();

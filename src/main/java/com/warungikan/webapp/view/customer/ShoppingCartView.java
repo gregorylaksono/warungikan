@@ -3,6 +3,7 @@ package com.warungikan.webapp.view.customer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -137,6 +138,11 @@ public class ShoppingCartView extends VerticalLayout implements View{
 			removeButton.addClickListener(e ->{
 				grid.removeRow(index+1);
 				items.remove(index);
+				List<ShopItemCart> its = ((MyUI)UI.getCurrent()).getItemsCart();
+				List<ShopItemCart> s = its.stream().filter(f -> f.getFish().getName().equals(i.getFish().getName())).collect(Collectors.toList());
+				its.removeAll(s);
+				((MyUI)UI.getCurrent()).setItemsCart(its);
+				((MyUI)UI.getCurrent()).updateNotifLabel();
 			});
 			removeButton.setIcon(FontAwesome.REMOVE);
 			removeButton.addStyleName(ValoTheme.BUTTON_TINY);

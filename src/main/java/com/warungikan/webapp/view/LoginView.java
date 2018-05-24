@@ -42,6 +42,8 @@ import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.model.FishShopItem;
 import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.util.Constant;
+import com.warungikan.webapp.util.Factory;
+import com.warungikan.webapp.util.Util;
 import com.warungikan.webapp.view.admin.AdminTransactionView;
 import com.warungikan.webapp.view.admin.AdminUserManagementView;
 import com.warungikan.webapp.view.admin.ShopItemView;
@@ -284,7 +286,8 @@ public class LoginView extends VerticalLayout implements View{
 		
 		logo.setSource(new ThemeResource("images/warungikanlogo.png"));
 		
-		CssLayout buttonContainer = new CssLayout();
+		HorizontalLayout buttonContainer = new HorizontalLayout();
+		buttonContainer.setSpacing(true);
 		Button shoppingCart = new Button("");
 		shoppingCart.setIcon(FontAwesome.SHOPPING_BASKET);
 		shoppingCart.addStyleName("fa-shopping-cart");
@@ -295,7 +298,10 @@ public class LoginView extends VerticalLayout implements View{
 		shoppingCart.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
 
 		if(!role.equals("ADMIN") && !role.equals("AGENT")) {
+			Button balanceButtn = createBalanceButton();
+			buttonContainer.addComponent(balanceButtn);
 			buttonContainer.addComponent(shoppingCart);
+			buttonContainer.setComponentAlignment(balanceButtn, Alignment.BOTTOM_RIGHT);
 		}
 		
 		Label cartItem = ((MyUI)UI.getCurrent()).getCartNumberNotifLabel();
@@ -315,7 +321,21 @@ public class LoginView extends VerticalLayout implements View{
 	
 	
 	
-    MenuBar getMenuButton(String role) {
+    private Button createBalanceButton() {
+    	String jwt = ((MyUI)UI.getCurrent()).getJwt();
+    	Long balance = ServiceInitator.getTransactionService().getBalanceCustomer(jwt);
+    	
+    	Button b = Factory.createButtonBorderless("Rp. "+Util.formatLocalAmount(balance));
+    	b.addClickListener(e->{
+    		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
+    		n.navigateTo(Constant.VIEW_MY_PROFILE);
+    	});
+    	
+		return b;
+	}
+
+
+	MenuBar getMenuButton(String role) {
         MenuBar split = new MenuBar();
         if(role.equalsIgnoreCase("ADMIN")){
         	split = generateAdminHeader(split);
