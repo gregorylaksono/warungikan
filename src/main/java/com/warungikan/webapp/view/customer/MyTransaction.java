@@ -47,6 +47,7 @@ public class MyTransaction extends VerticalLayout implements View {
 	public static DecimalFormat decimalFormat = new DecimalFormat("###,###");
 	public MyTransaction() {
 		this.jwt = ((MyUI)UI.getCurrent()).getJwt();
+		((MyUI)UI.getCurrent()).updateBalance();
 		setMargin(true);
 		setSpacing(true);
 		

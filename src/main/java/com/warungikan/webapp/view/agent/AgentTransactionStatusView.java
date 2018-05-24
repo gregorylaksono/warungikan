@@ -57,7 +57,7 @@ public class AgentTransactionStatusView extends VerticalLayout implements View, 
 	private Table createTabel() {
 		Table t = new Table();
 		t.setCaption("Pesanan hari ini");
-		t.setWidth(800, Unit.PIXELS);
+		t.setWidth(850, Unit.PIXELS);
 		t.setHeight(500, Unit.PIXELS);
 
 		t.addContainerProperty(TRANSACTION_ID, String.class,null);

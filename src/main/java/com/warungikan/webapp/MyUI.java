@@ -28,9 +28,12 @@ import com.vaadin.ui.Window;
 import com.warungikan.webapp.component.MapPage;
 import com.warungikan.webapp.component.RegisterView;
 import com.warungikan.webapp.dialog.CreateUserForm;
+import com.warungikan.webapp.manager.ServiceInitator;
 import com.warungikan.webapp.model.AgentProduct;
 import com.warungikan.webapp.model.ShopItemCart;
 import com.warungikan.webapp.util.Constant;
+import com.warungikan.webapp.util.Factory;
+import com.warungikan.webapp.util.Util;
 import com.warungikan.webapp.view.LoginView;
 import com.warungikan.webapp.view.VerificationView;
 import com.warungikan.webapp.view.customer.ShippingAddressView;
@@ -74,6 +77,8 @@ public class MyUI extends UI {
 	private VerticalLayout root;
 
 	private Label cartNumberNotifLabel;
+	
+	private Button buttonBalance;
 
 	@Override
 	protected void init(VaadinRequest request) {
@@ -204,6 +209,20 @@ public class MyUI extends UI {
 		}
 		cartNumberNotifLabel.setValue(String.valueOf(cartItemNum));
 		cartNumberNotifLabel.markAsDirty();
+	}
+
+	public Button updateBalance() {
+		if(buttonBalance == null){
+			buttonBalance = Factory.createButtonBorderless("");
+		}
+		buttonBalance.addClickListener(e->{
+    		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
+    		n.navigateTo(Constant.VIEW_MY_PROFILE);
+    	});
+		Long balance = ServiceInitator.getTransactionService().getBalanceCustomer(jwt);
+		buttonBalance.setCaption("Saldo anda Rp. "+Util.formatLocalAmount(balance));
+		buttonBalance.markAsDirty();
+		return buttonBalance;
 	}
 	
 }

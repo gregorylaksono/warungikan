@@ -74,7 +74,7 @@ public class TransactionDetailMap extends VerticalLayout {
 			case 6: state = TransactionManagerImpl.TrxState.CANCEL; break;
 			default: state = null;
 			}
-			Boolean isSuccess = ServiceInitator.getTransactionService().markTransaction(jwt, String.valueOf(trxId), state);
+			Boolean isSuccess = ServiceInitator.getTransactionService().markTransaction(jwt, String.valueOf(trxId.getOid()), state);
 			if(isSuccess == null){
 				Notification.show("Status transaksi tidak dapat diubah", Type.HUMANIZED_MESSAGE);
 				((MyUI)UI.getCurrent()).closeWindow();

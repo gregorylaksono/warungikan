@@ -301,7 +301,7 @@ public class LoginView extends VerticalLayout implements View{
 		shoppingCart.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
 
 		if(!role.equals("ADMIN") && !role.equals("AGENT")) {
-			Button balanceButtn = createBalanceButton();
+			Button balanceButtn = ((MyUI)UI.getCurrent()).updateBalance();
 			buttonContainer.addComponent(balanceButtn);
 			buttonContainer.addComponent(shoppingCart);
 			buttonContainer.setComponentAlignment(balanceButtn, Alignment.BOTTOM_RIGHT);
@@ -324,20 +324,6 @@ public class LoginView extends VerticalLayout implements View{
 	
 	
 	
-    private Button createBalanceButton() {
-    	String jwt = ((MyUI)UI.getCurrent()).getJwt();
-    	Long balance = ServiceInitator.getTransactionService().getBalanceCustomer(jwt);
-    	
-    	Button b = Factory.createButtonBorderless("Saldo anda Rp. "+Util.formatLocalAmount(balance));
-    	b.addClickListener(e->{
-    		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
-    		n.navigateTo(Constant.VIEW_MY_PROFILE);
-    	});
-    	
-		return b;
-	}
-
-
 	MenuBar getMenuButton(String role) {
         MenuBar split = new MenuBar();
         if(role.equalsIgnoreCase("ADMIN")){
