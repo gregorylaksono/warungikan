@@ -9,6 +9,7 @@ public class ApplicationProperties {
 
 	private static InputStream input;
 	private static Properties prop;
+	private static boolean isLoaded;
 
 	public static String getWsURL(){
 		init();
@@ -27,8 +28,10 @@ public class ApplicationProperties {
 			if(input == null){
 				input = ApplicationProperties.class.getClassLoader().getResourceAsStream("application.properties");
 			}
-			
-			prop.load(input);
+			if(!isLoaded){
+				prop.load(input);
+				isLoaded = true;
+			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {

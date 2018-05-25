@@ -1,7 +1,12 @@
 package com.warungikan.webapp;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.LogManager;
 
+import javax.servlet.annotation.WebListener;
 import javax.servlet.annotation.WebServlet;
 
 import org.warungikan.db.model.AgentData;
@@ -39,6 +44,8 @@ import com.warungikan.webapp.view.VerificationView;
 import com.warungikan.webapp.view.customer.ShippingAddressView;
 import com.warungikan.webapp.view.customer.ShopView;
 import com.warungikan.webapp.view.customer.ShoppingCartView;
+
+import ch.qos.logback.ext.spring.web.LogbackConfigListener;
 
 
 
@@ -106,6 +113,22 @@ public class MyUI extends UI {
 		cartNumberNotifLabel = new Label();
 		cartNumberNotifLabel.setWidth(null);
 		cartNumberNotifLabel.addStyleName("cincrement-label");
+		
+//		initLoggingConfiguration();
+	}
+
+	private void initLoggingConfiguration() {
+		Properties preferences = new Properties();
+		try {
+		    FileInputStream configFile = (FileInputStream) MyUI.class.getClassLoader().getResourceAsStream("application.properties");
+		    preferences.load(configFile);
+		    LogManager.getLogManager().readConfiguration(configFile);
+		    
+		} catch (IOException ex)
+		{
+		    System.out.println("WARNING: Could not open configuration file");
+		    System.out.println("WARNING: Logging not configured (console output only)");
+		}		
 	}
 
 	public Navigator getNavigator() {
@@ -162,7 +185,10 @@ public class MyUI extends UI {
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = true)
     public static class MyUIServlet extends VaadinServlet {
     }
-
+	
+	@WebListener
+	public static class MyLogbackConfigListener extends LogbackConfigListener {
+	}
 	public void setItemsCart(List<ShopItemCart> items2) {
 		this.cartItems = items2;
 	}
