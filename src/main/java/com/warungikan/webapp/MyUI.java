@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.LogManager;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.annotation.WebServlet;
 
@@ -20,7 +21,9 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.CustomizedSystemMessages;
 import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.server.SystemMessages;
 import com.vaadin.tapio.googlemaps.GoogleMap;
 import com.vaadin.tapio.googlemaps.client.LatLon;
 import com.vaadin.ui.Alignment;
@@ -68,15 +71,15 @@ public class MyUI extends UI {
 	private static final long serialVersionUID = -8766267531481479298L;
 
 	private Navigator navigator;
-	
+
 	private String jwt;
-	
+
 	private String role;
-	
+
 	private List<ShopItem> items;
 
 	private List<ShopItemCart> cartItems;
-	
+
 	private AgentProduct agentProduct;
 
 	private VerticalLayout navigatorContent;
@@ -86,7 +89,7 @@ public class MyUI extends UI {
 	private VerticalLayout root;
 
 	private Label cartNumberNotifLabel;
-	
+
 	private Button buttonBalance;
 
 	@Override
@@ -95,7 +98,7 @@ public class MyUI extends UI {
 		navigatorContent = new VerticalLayout();
 		navigatorContent.setSizeFull();
 		header = new HorizontalLayout();
-		
+
 		root.addComponent(header);
 		root.addComponent(navigatorContent);
 		root.setExpandRatio(header, 0.0f);
@@ -103,33 +106,33 @@ public class MyUI extends UI {
 		root.setComponentAlignment(header, Alignment.TOP_RIGHT);
 		root.setComponentAlignment(navigatorContent, Alignment.BOTTOM_CENTER);
 		setContent(root);
-		
+
 		Navigator n = new Navigator(this, navigatorContent);
 
 		n.addView(Constant.VIEW_CONFIRM_USER_PAGE, VerificationView.class);
 		n.addView(Constant.VIEW_LOGIN, LoginView.class);
 		n.addView(Constant.VIEW_REGISTER, RegisterView.class);
 		setNavigator(n);
-		
-		
+
+
 		cartNumberNotifLabel = new Label();
 		cartNumberNotifLabel.setWidth(null);
 		cartNumberNotifLabel.addStyleName("cincrement-label");
-		
-//		initLoggingConfiguration();
+
+		//		initLoggingConfiguration();
 	}
 
 	private void initLoggingConfiguration() {
 		Properties preferences = new Properties();
 		try {
-		    FileInputStream configFile = (FileInputStream) MyUI.class.getClassLoader().getResourceAsStream("application.properties");
-		    preferences.load(configFile);
-		    LogManager.getLogManager().readConfiguration(configFile);
-		    
+			FileInputStream configFile = (FileInputStream) MyUI.class.getClassLoader().getResourceAsStream("application.properties");
+			preferences.load(configFile);
+			LogManager.getLogManager().readConfiguration(configFile);
+
 		} catch (IOException ex)
 		{
-		    System.out.println("WARNING: Could not open configuration file");
-		    System.out.println("WARNING: Logging not configured (console output only)");
+			System.out.println("WARNING: Could not open configuration file");
+			System.out.println("WARNING: Logging not configured (console output only)");
 		}		
 	}
 
@@ -148,22 +151,22 @@ public class MyUI extends UI {
 	public void setJwt(String jwt) {
 		this.jwt = jwt;
 	}
-	
-    public List<ShopItem> getItems() {
+
+	public List<ShopItem> getItems() {
 		return items;
 	}
 
 	public void setItems(List<ShopItem> items2) {
 		this.items = items2;
 	}
-	
+
 	public void closeWindow() {
 		for(Window w: getWindows()) {
 			w.close();
 		}
 	}
-	
-	
+
+
 
 	public VerticalLayout getNavigatorContent() {
 		return navigatorContent;
@@ -184,17 +187,22 @@ public class MyUI extends UI {
 
 
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MyUI.class, productionMode = true)
-    public static class MyUIServlet extends VaadinServlet {
-    }
-	
+	@VaadinServletConfiguration(ui = MyUI.class, productionMode = true)
+	public static class MyUIServlet extends VaadinServlet {
+		@Override
+		   protected void servletInitialized() throws ServletException {
+		      super.servletInitialized();
+		      getService().setSystemMessagesProvider(new MySystemMessagesProvider());
+		   }
+	}
+
 	@WebListener
 	public static class MyLogbackConfigListener extends LogbackConfigListener {
 	}
 	public void setItemsCart(List<ShopItemCart> items2) {
 		this.cartItems = items2;
 	}
-	
+
 	public List<ShopItemCart> getItemsCart(){
 		return this.cartItems;
 	}
@@ -244,13 +252,13 @@ public class MyUI extends UI {
 			buttonBalance = Factory.createButtonBorderless("");
 		}
 		buttonBalance.addClickListener(e->{
-    		Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
-    		n.navigateTo(Constant.VIEW_MY_PROFILE);
-    	});
+			Navigator n = ((MyUI)UI.getCurrent()).getNavigator();
+			n.navigateTo(Constant.VIEW_MY_PROFILE);
+		});
 		Long balance = ServiceInitator.getTransactionService().getBalanceCustomer(jwt);
 		buttonBalance.setCaption("Saldo anda Rp. "+Util.formatLocalAmount(balance));
 		buttonBalance.markAsDirty();
 		return buttonBalance;
 	}
-	
+
 }
