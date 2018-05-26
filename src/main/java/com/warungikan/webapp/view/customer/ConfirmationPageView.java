@@ -94,15 +94,20 @@ public class ConfirmationPageView extends VerticalLayout implements View {
 				Long transportPrice = new BigDecimal(distanceAbs).longValue() * Long.parseLong(p.getPricePerKM());
 				List<ShopItemCart> carts = ((MyUI)UI.getCurrent()).getItemsCart();
 				Set<TransactionDetail> details = convertObject(carts);
-				Transaction result = ServiceInitator.getTransactionService().addTransaction(jwt, p.getUser().getEmail(), transportPrice,p.getDistance(), details);
-				if(result != null){
-					UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_TRANSACTION);
-					((MyUI)UI.getCurrent()).clearShopingCart();
-					((MyUI)UI.getCurrent()).updateNotifLabel();
-					Notification.show("Transaksi berhasil", Type.TRAY_NOTIFICATION);
+				Boolean isBalanceEnough = ServiceInitator.getTransactionService().isCustomerLegitimateForTransaction(jwt, customer.getEmail(), p.getUser().getEmail(), p.getDistance(), details);
+				if(isBalanceEnough){
+					Transaction result = ServiceInitator.getTransactionService().addTransaction(jwt, p.getUser().getEmail(), transportPrice,p.getDistance(), details);
+					if(result != null){
+						UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_MY_TRANSACTION);
+						((MyUI)UI.getCurrent()).clearShopingCart();
+						((MyUI)UI.getCurrent()).updateNotifLabel();
+						Notification.show("Transaksi berhasil", Type.TRAY_NOTIFICATION);
+					}else{
+						UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_SHOP);
+						Notification.show("Terjadi kesalahan saat melakukan transaksi", Type.ERROR_MESSAGE);
+					}					
 				}else{
-					UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_SHOP);
-					Notification.show("Terjadi kesalahan saat melakukan transaksi", Type.ERROR_MESSAGE);
+					Notification.show("Saldo anda tidak cukup untuk melakukan transaksi ini", Type.ERROR_MESSAGE);
 				}
 				((MyUI)UI.getCurrent()).closeWindow();
 			}
