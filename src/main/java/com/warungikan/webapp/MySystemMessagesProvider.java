@@ -1,10 +1,13 @@
 package com.warungikan.webapp;
 
+import org.springframework.boot.ApplicationArguments;
+
 import com.vaadin.server.CustomizedSystemMessages;
 import com.vaadin.server.SystemMessages;
 import com.vaadin.server.SystemMessagesInfo;
 import com.vaadin.server.SystemMessagesProvider;
 import com.vaadin.server.VaadinServlet;
+import com.warungikan.webapp.util.ApplicationProperties;
 
 public class MySystemMessagesProvider implements SystemMessagesProvider {
 
@@ -15,9 +18,8 @@ public class MySystemMessagesProvider implements SystemMessagesProvider {
 	    */
 	   public MySystemMessagesProvider() {
 	      customizedSystemMessages = new CustomizedSystemMessages();
-	      customizedSystemMessages.setSessionExpiredNotificationEnabled(false);
-	      customizedSystemMessages.setSessionExpiredURL(VaadinServlet.getCurrent().getServletConfig().getServletContext().getContextPath());
-
+	      customizedSystemMessages.setSessionExpiredNotificationEnabled(true);
+	      customizedSystemMessages.setSessionExpiredURL(ApplicationProperties.getLogoutUrl());
 	   }
 
 	   @Override

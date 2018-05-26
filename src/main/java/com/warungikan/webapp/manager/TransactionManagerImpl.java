@@ -289,7 +289,7 @@ public class TransactionManagerImpl {
 			headers.add("Authorization", sessionId);
 			HttpEntity request = new HttpEntity<>(details,headers);
 			RestTemplate t = new RestTemplate();
-			ResponseEntity<Map> response = t.postForEntity(new URI(Constant.WS_POST_TRANSCTION_IS_LEGIT_URL+"?customer_id"+customer_id+"&agent="+agent_id+"&total_km="+String.valueOf(total_km)), request, Map.class);
+			ResponseEntity<Map> response = t.postForEntity(new URI(Constant.WS_POST_TRANSCTION_IS_LEGIT_URL+"?customer_id="+customer_id+"&agent="+agent_id+"&total_km="+String.valueOf(total_km)), request, Map.class);
 			
 			if(response.getStatusCodeValue() == 202){
 				Map bodyResponse = response.getBody();

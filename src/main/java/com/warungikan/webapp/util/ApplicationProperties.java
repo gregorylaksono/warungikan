@@ -20,6 +20,11 @@ public class ApplicationProperties {
 		return prop.getProperty("admin.email");
 	}
 	
+	public static String getLogoutUrl(){
+		init();
+		return prop.getProperty("logout.url");
+	}
+	
 	private static void init(){
 		if(prop == null){
 			prop = new Properties();
