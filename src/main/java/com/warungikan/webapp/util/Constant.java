@@ -18,6 +18,7 @@ public class Constant {
 	public static final String VIEW_REGISTER = "register";
 	public static final String VIEW_ITEM_STOCK = "item_stock";
 	public static final String VIEW_MY_WALLET_HISTORY = "my_wallet_history";
+	public static final String VIEW_STOCKS = "admin_stocks";
 	
 	public static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
 	public static final String PLACES_API_GEOCODE = "https://maps.googleapis.com/maps/api/geocode";
@@ -65,6 +66,7 @@ public class Constant {
 	public static final String WS_GET_TRANSACTION_CALC_TRANSPORT_URL = ApplicationProperties.getWsURL()+"transaction/transport_price";
 	public static final String WS_GET_TRX_DETAIL_URL = ApplicationProperties.getWsURL()+"transaction/detail";
 	public static final String WS_POST_TRANSCTION_IS_LEGIT_URL = ApplicationProperties.getWsURL()+"transaction/is_legit";
+	public static final String WS_POST_TOP_UP_URL = ApplicationProperties.getWsURL()+"transaction/topup";
 	
 	public static final String WS_GET_GET_SHOP_ITEM_URL = ApplicationProperties.getWsURL()+"shop/item";
 	public static final String WS_POST_CREATE_SHOP_ITEM_URL = ApplicationProperties.getWsURL()+"shop/item";
@@ -76,6 +78,7 @@ public class Constant {
 	public static final String WS_POST_CALCULATE_AGENT_PRE = ApplicationProperties.getWsURL()+"transaction/agents";
 	public static final String WS_GET_AGENT_DATA_URL = ApplicationProperties.getWsURL()+"user/data";
 	public static final String WS_PUT_USER_COORDINATE_URL = ApplicationProperties.getWsURL()+"user/coordinate";
+	public static final String WS_PUT_TOP_UP_URL = ApplicationProperties.getWsURL()+"transaction/topup";
 	public static final String WS_POST_ADD_STOCK_URL = ApplicationProperties.getWsURL()+"shop/stock";
 	
 	public static final String WS_GET_TOPUP_URL = ApplicationProperties.getWsURL()+"transaction/topup";
@@ -85,6 +88,7 @@ public class Constant {
 	public static final String HEADER_STRING = "Authorization";
 	public static final String IV = "AAAAAAAAAAAAFFFF";
 	public static final String ENC_KEY = "NhzeepOXvXgSTrOxMuNMT1zHO6PQj2Gc6JnRQgMD";
+	
 	
 	
 	

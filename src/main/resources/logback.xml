@@ -54,6 +54,8 @@
 	</appender>
 	<logger name="com.warungikan.webapp" level="debug" />
 	<logger name="org.springframework.web" level="error" />
+	<logger name="org.eclipse.jetty.websocket.common.io" level="none"/>
+	
 	<root level="debug">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="file-audit" />

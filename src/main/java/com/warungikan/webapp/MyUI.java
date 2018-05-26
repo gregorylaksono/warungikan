@@ -13,6 +13,7 @@ import org.warungikan.db.model.AgentData;
 import org.warungikan.db.model.ShopItem;
 import org.warungikan.db.model.User;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -58,6 +59,7 @@ import ch.qos.logback.ext.spring.web.LogbackConfigListener;
  */
 @Theme("warungikan")
 @Push
+@PreserveOnRefresh
 public class MyUI extends UI {
 
 	/**

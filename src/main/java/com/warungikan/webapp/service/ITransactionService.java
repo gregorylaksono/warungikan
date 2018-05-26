@@ -30,4 +30,6 @@ public interface ITransactionService {
 	public List<TopupWalletHistory> getAllTopupHistory(String jwt);
 	public List<TopupWalletHistory> getTopupHistorySingleUser(String jwt);
 	public List<TransactionDetail> getTransactionDetail(String jwt, String transactionId);
+	public Boolean releaseTopup(String jwt, String topupId);
+	public Boolean doTopup(String jwt, TopupWalletHistory h);
 }

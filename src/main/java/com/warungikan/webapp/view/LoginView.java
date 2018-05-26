@@ -46,6 +46,7 @@ import com.warungikan.webapp.util.Factory;
 import com.warungikan.webapp.util.Util;
 import com.warungikan.webapp.view.admin.AdminTransactionView;
 import com.warungikan.webapp.view.admin.AdminUserManagementView;
+import com.warungikan.webapp.view.admin.AgentStocksView;
 import com.warungikan.webapp.view.admin.ShopItemView;
 import com.warungikan.webapp.view.admin.WalletTransactionView;
 import com.warungikan.webapp.view.agent.AgentStockView;
@@ -57,6 +58,7 @@ import com.warungikan.webapp.view.customer.MyWalletTransactionView;
 import com.warungikan.webapp.view.customer.ShippingAddressView;
 import com.warungikan.webapp.view.customer.ShopView;
 import com.warungikan.webapp.view.customer.ShoppingCartView;
+import com.warungikan.webapp.view.customer._TopupWaletDescriptionView;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -216,12 +218,14 @@ public class LoginView extends VerticalLayout implements View{
 		n.addView(Constant.VIEW_USERS_TRANSACTION, AdminTransactionView.class);
 		n.addView(Constant.VIEW_WALLET_TRANSACTION, WalletTransactionView.class);
 		n.addView(Constant.VIEW_SHOP_ITEM, ShopItemView.class);
+		n.addView(Constant.VIEW_STOCKS, AgentStocksView.class);
 		
 		navigatorContent.add(Constant.VIEW_MY_PROFILE);
 		navigatorContent.add(Constant.VIEW_USERS_ADMIN);
 		navigatorContent.add(Constant.VIEW_USERS_TRANSACTION);
 		navigatorContent.add(Constant.VIEW_WALLET_TRANSACTION);
 		navigatorContent.add(Constant.VIEW_SHOP_ITEM);
+		navigatorContent.add(Constant.VIEW_STOCKS);
 		
 		defaultNavigationView = Constant.VIEW_USERS_ADMIN;
 		n.navigateTo(Constant.VIEW_USERS_ADMIN);		
@@ -375,6 +379,9 @@ public class LoginView extends VerticalLayout implements View{
         });
         dropdown.addItem("Transaction", e ->{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_USERS_TRANSACTION);
+        });
+        dropdown.addItem("Agent stock", e ->{
+        	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_STOCKS);
         });
         dropdown.addItem("Shop item", e ->{
         	UI.getCurrent().getNavigator().navigateTo(Constant.VIEW_SHOP_ITEM);

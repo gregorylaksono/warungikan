@@ -417,4 +417,45 @@ public class TransactionManagerImpl {
 			throw new WarungIkanNetworkException("Could not connect to server");
 		}
 	}
+
+	public Boolean releaseTopup(String jwt, String topupId) throws UserSessionException,WarungIkanNetworkException{
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", jwt);
+			HttpEntity request = new HttpEntity<>(headers);
+			RestTemplate t = new RestTemplate();
+			ResponseEntity<String> response = t.exchange(new URI(Constant.WS_PUT_TOP_UP_URL+"/"+topupId),HttpMethod.PUT, request, String.class);
+			if(response.getStatusCodeValue() == 202){
+				return true;
+			}
+			else if(response.getStatusCodeValue() == 401){
+				throw new UserSessionException("Could not identified user");
+			}else {
+				return false;
+			}
+			
+		} catch (Exception e) {
+			throw new WarungIkanNetworkException("Could not connect to server");
+		}	}
+
+	public Boolean doTopup(String jwt, TopupWalletHistory h)  throws UserSessionException,WarungIkanNetworkException{
+
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", jwt);
+			HttpEntity request = new HttpEntity<>(h,headers);
+			RestTemplate t = new RestTemplate();
+			ResponseEntity<String> response = t.postForEntity(new URI(Constant.WS_POST_TOP_UP_URL), request, String.class);
+			if(response.getStatusCodeValue() == 202){
+				return true;
+			}
+			else if(response.getStatusCodeValue() == 401){
+				throw new UserSessionException("Could not identified user");
+			}else {
+				return false;
+			}
+		} catch (Exception e) {
+			throw new WarungIkanNetworkException("Could not connect to server");
+		}
+	}
 }

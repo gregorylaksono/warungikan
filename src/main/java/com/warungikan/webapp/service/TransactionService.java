@@ -252,4 +252,32 @@ public class TransactionService implements ITransactionService {
 		}
 		return null;
 	}
+
+	@Override
+	public Boolean releaseTopup(String jwt, String topupId) {
+
+		try {
+			return trxManager.releaseTopup(jwt, topupId);
+		}   catch (UserSessionException e) {
+			logout();
+			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
+		} catch (WarungIkanNetworkException e) {
+			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+		}
+		return null;
+	}
+
+	@Override
+	public Boolean doTopup(String jwt, TopupWalletHistory h) {
+		
+		try {
+			return trxManager.doTopup(jwt, h);
+		}  catch (UserSessionException e) {
+			logout();
+			Notification.show("Your login data has been altered", Type.TRAY_NOTIFICATION);
+		} catch (WarungIkanNetworkException e) {
+			Notification.show("Can not connect to server. Please contact your admin", Type.ERROR_MESSAGE);
+		}
+		return null;
+	}
 }
